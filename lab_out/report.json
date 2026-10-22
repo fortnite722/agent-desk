@@ -1,0 +1,72 @@
+{
+ "source": "alpaca",
+ "days": 497,
+ "train_days": 298,
+ "test_days": 199,
+ "date_range": [
+  "2024-10-28",
+  "2026-10-21"
+ ],
+ "variants": 4320,
+ "trades_simulated": 10855066,
+ "runtime_s": 98,
+ "train_pass_rate": 0.0,
+ "control_train_pass_rate": 0.0,
+ "survivor_rate": 0.0,
+ "control_survivor_rate": 0.0,
+ "candidates": [],
+ "survivors": [],
+ "best_curve": [],
+ "best_monte_carlo": null,
+ "verdict": "NO EDGE FOUND: real setups did no better than coin-flips. Don't trade any of them.",
+ "by_signal": {
+  "vwap_cross": {
+   "variants": 540,
+   "train_pos": 0,
+   "test_pos": 0,
+   "best_train_t": -1.6
+  },
+  "ema50_cross": {
+   "variants": 540,
+   "train_pos": 0,
+   "test_pos": 0,
+   "best_train_t": -2.65
+  },
+  "ema9_21": {
+   "variants": 540,
+   "train_pos": 0,
+   "test_pos": 0,
+   "best_train_t": -2.53
+  },
+  "orb5": {
+   "variants": 540,
+   "train_pos": 4,
+   "test_pos": 22,
+   "best_train_t": -0.57
+  },
+  "orb15": {
+   "variants": 540,
+   "train_pos": 2,
+   "test_pos": 12,
+   "best_train_t": -0.13
+  },
+  "orb30": {
+   "variants": 540,
+   "train_pos": 14,
+   "test_pos": 34,
+   "best_train_t": 0.08
+  },
+  "vwap_bounce": {
+   "variants": 540,
+   "train_pos": 0,
+   "test_pos": 0,
+   "best_train_t": -0.52
+  },
+  "rsi_fade": {
+   "variants": 540,
+   "train_pos": 0,
+   "test_pos": 0,
+   "best_train_t": -1.32
+  }
+ }
+}
