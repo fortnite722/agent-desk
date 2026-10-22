@@ -1,4 +1,4 @@
-"""TURTLE DESK: trend-following breakouts on crypto (4-hour bars).
+"""TURTLE DESK: trend-following breakouts on crypto + gold (PAXG) (4-hour bars).
 
 The classic Turtle / Donchian rules, a family of trend-following systems with
 a long public track record across markets:
@@ -16,7 +16,7 @@ from .common import Book, atr, ema
 CFG = {"timeframe_min": 240, "entry_n": 20, "exit_n": 10, "ema_n": 100, "stop_atr": 2.0, "trail_atr": 3.0,
        "atr_n": 20, "risk_pct": 0.01, "max_positions": 3, "max_pos_pct": 0.40, "fee_pct": 0.0025,
        "slip_pct": 0.0005, "cash": 100.0,
-       "symbols": ["BTC/USD", "ETH/USD", "SOL/USD", "DOGE/USD", "AVAX/USD", "LINK/USD"]}
+       "symbols": ["BTC/USD", "ETH/USD", "SOL/USD", "DOGE/USD", "AVAX/USD", "LINK/USD", "PAXG/USD"]}
 
 
 def levels(hist, cfg=CFG):
