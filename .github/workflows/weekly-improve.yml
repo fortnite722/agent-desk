@@ -1,0 +1,23 @@
+name: weekly self-improve
+on:
+  schedule:
+    - cron: "0 18 * * 0"   # Sunday
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: improve
+  cancel-in-progress: false
+jobs:
+  improve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Re-tune the crypto desk on recent real data
+        run: python cloud/improve.py
+      - name: Save results
+        run: bash cloud/sync.sh "weekly self-improve"

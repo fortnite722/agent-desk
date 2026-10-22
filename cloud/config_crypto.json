@@ -1,0 +1,17 @@
+{
+ "_note": "Cloud overrides for the crypto desk. The weekly improve loop rewrites this file.",
+ "timeframe_min": 60,
+ "min_confidence": 0.5,
+ "min_edge_multiple": 1.5,
+ "starting_cash": 100.0,
+ "max_hold_bars": 24,
+ "cooldown_bars": 6,
+ "symbols": [
+  "BTC/USD",
+  "ETH/USD",
+  "SOL/USD",
+  "DOGE/USD",
+  "AVAX/USD",
+  "LINK/USD"
+ ]
+}

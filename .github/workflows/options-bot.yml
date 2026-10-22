@@ -1,0 +1,37 @@
+name: qqq options bot
+on:
+  schedule:
+    # 9:27am New York in both summer (13:27 UTC) and winter (14:27 UTC) time; the bot skips the wrong one
+    - cron: "27 13 * * 1-5"
+    - cron: "27 14 * * 1-5"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: options-bot
+  cancel-in-progress: false
+jobs:
+  trade-day:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Only run if it's ~9:27am in New York
+        id: clock
+        run: |
+          H=$(TZ=America/New_York date +%H)
+          if [ "$H" = "09" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "go=1" >> $GITHUB_OUTPUT; fi
+      - name: Trade the session
+        if: steps.clock.outputs.go == '1'
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          CLOUD_SYNC: "1"
+          LAST_MINUTE: "340"
+        run: python options_paper.py
+      - name: Save results
+        if: always() && steps.clock.outputs.go == '1'
+        run: bash cloud/sync.sh "options bot day"
