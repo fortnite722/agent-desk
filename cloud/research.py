@@ -2,6 +2,7 @@
 
   Turtle    : ~2 years of 4-hour crypto bars
   Reversion : ~10 years of daily SPY / QQQ / IWM bars
+  Crypto    : ~1 year of the 6-agent desk on its live settings
 Writes docs/research.json (the Research room monitors in the office read it).
 Each desk is also split in time: first 60% vs last 40%, so you can see if it held up.
 """
@@ -30,6 +31,23 @@ def split_eval(mod, bars, cfg):
     return {"full": stats(full), "first_60": stats(first), "last_40": stats(last),
             "range": [str(ts[0])[:10], str(ts[-1])[:10]] if ts else None,
             "equity_curve": eq[::max(1, len(eq) // 300)], "recent_trades": full.trades[-15:]}
+
+
+class CryptoDeskShim:
+    """Lets the 6-agent crypto desk go through the same split test as the other desks."""
+    @staticmethod
+    def backtest(bars, cfg_dict):
+        from backtest import run
+        from cloud.crypto_step import load_cfg
+        from desks.common import Book
+        cfg = load_cfg()
+        desk, _, _ = run(cfg, bars, quiet=True)
+        b = Book("crypto", cfg.starting_cash, cfg.fee_pct, cfg.slippage_pct)
+        b.trades = [{**t, "symbol": t["symbol"]} for t in desk.trades]
+        b.equity_log = [list(e) for e in desk.equity_curve]
+        b.cash = desk.equity()
+        b.fees_paid = desk.broker.fees_paid
+        return b
 
 
 def buy_hold(bars, cash=100.0):
@@ -67,6 +85,19 @@ def main():
     except Exception as e:
         out["desks"]["reversion"] = {"error": str(e)[:300]}
         print("reversion research failed:", e)
+    try:
+        from cloud.crypto_step import load_cfg
+        ccfg = load_cfg()
+        tf = "1Hour" if ccfg.timeframe_min == 60 else f"{ccfg.timeframe_min}Min"
+        raw = alpaca_bars(ccfg.symbols, now - timedelta(days=365), timeframe=tf)
+        bars = {s: aggregate(v, ccfg.timeframe_min) for s, v in raw.items() if v}
+        r = split_eval(CryptoDeskShim, bars, {"timeframe_min": ccfg.timeframe_min})
+        r["buy_hold_return"] = buy_hold(bars)
+        out["desks"]["crypto"] = r
+        print("crypto desk", r["full"])
+    except Exception as e:
+        out["desks"]["crypto"] = {"error": str(e)[:300]}
+        print("crypto desk research failed:", e)
     lab = os.path.join(ROOT, "lab_out", "report.json")
     if os.path.exists(lab):
         rep = json.load(open(lab))

@@ -14,6 +14,10 @@ The older Desk City view lives at `/city.html`.
 | Research Lab | Pattern Lab + real-history backtests of every desk | weeknights |
 | Risk Office | firm-wide brakes, self-improve log | always |
 
+**SENTINEL, the council:** every weeknight it grades each desk on real history (full period + most recent 40%) and its live paper record.
+ACTIVE = full size · PROBATION = half size · BENCHED = no new trades (exits still managed). No proof, no trade.
+Rules live in `cloud/council.py`. If every desk is benched, the firm sits in cash.
+
 A six-agent trading desk that runs in **paper mode** (fake money). Each agent has one job, and every decision gets written down. That way, when you post results, they're real.
 
 | Agent | Job |

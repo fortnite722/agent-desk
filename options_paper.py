@@ -216,7 +216,18 @@ def main():
     ap.add_argument("--rank", type=int, default=1)
     a = ap.parse_args()
     v, status = pick_setup(a.rank)
+    import sys as _s
+    _s.path.insert(0, ROOT)
+    from cloud.council import status as council_status
+    st, _, why = council_status("options")
     bot = Bot(v, status)
+    if st == "BENCHED":
+        now = datetime.now(NY)
+        bot.status = "BENCHED by SENTINEL"
+        bot.log(now, "benched", f"Benched by the council: {why}. No trades today.")
+        bot.dashboard(now)
+        print("benched by the council; not trading today")
+        return
     last_sync = time.time()
     while True:
         now = datetime.now(NY)

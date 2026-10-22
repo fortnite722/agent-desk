@@ -74,7 +74,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outl
   <form class="card" id="signin">
     <div class="logo">BEACON CAPITAL</div>
     <h1>Trading Floor</h1>
-    <p>Six desks. Every monitor is wired to a live bot. Paper money while they earn their keep.</p>
+    <p>Six desks. Every monitor is wired to a live bot. A council decides each night who's allowed to trade. No proof, no trade.</p>
     <div><label for="name">Trader name</label><input type="text" id="name" autocomplete="nickname" placeholder="Matthew" maxlength="24"></div>
     <button type="submit" id="enter">Enter the floor</button>
     <div class="fine">Mac: click to look around · WASD to walk · Shift to run · 1–6 jump to a desk · Esc to free the mouse.<br>
@@ -102,7 +102,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outl
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ======================================================================= data
-const D = { crypto: null, options: null, turtle: null, reversion: null, research: null, improve: null };
+const D = { crypto: null, options: null, turtle: null, reversion: null, research: null, improve: null, council: null };
 async function load(name) {
   try { const r = await fetch(name + ".json?t=" + Date.now(), { cache: "no-store" }); return r.ok ? await r.json() : null; } catch (e) { return null; }
 }
@@ -124,6 +124,8 @@ function deskPnl(k) {
   if (k === "options") return d.total ? d.total.net : 0;
   return d.equity - d.start_cash;
 }
+function council(k) { const c = D.council && D.council.strategies && D.council.strategies[k]; return c || null; }
+const STATUS_COL = { ACTIVE: "#3ef0d0", PROBATION: "#ffc457", BENCHED: "#ff4fa3" };
 function deskOpen(k) {
   const d = D[k]; if (!d) return 0;
   if (k === "crypto") return Object.values(d.symbols || {}).filter(s => s.status === "long").length;
@@ -330,6 +332,18 @@ const SCREENS = {
     const brake = D.crypto && D.crypto.brake;
     g.fillStyle = brake ? C.down : C.up; g.font = "700 15px Chakra Petch, sans-serif"; g.fillText(brake ? brake.toUpperCase() : "ALL BRAKES ARMED · NO LIMITS HIT", 16, MH - 16);
   },
+  riskCouncil(g) {
+    const c = D.council; frame(g, "SENTINEL council", c ? ago(c.updated) : "");
+    if (!c) return empty(g, "The council grades every strategy each weeknight. Until it rules, every desk is benched: no proof, no trade.");
+    let y = 72;
+    Object.values(c.strategies).forEach(st => {
+      g.fillStyle = C.ink; g.font = "700 17px Chakra Petch, sans-serif"; g.fillText(st.name, 16, y);
+      g.fillStyle = STATUS_COL[st.status]; g.font = "700 15px JetBrains Mono, monospace"; g.textAlign = "right"; g.fillText(st.status, MW - 14, y); g.textAlign = "left";
+      g.fillStyle = C.dim; g.font = "12px JetBrains Mono, monospace"; const r = st.reasons[st.reasons.length - 1] || ""; g.fillText(r.length > 62 ? r.slice(0, 61) + "…" : r, 16, y + 20);
+      y += 54;
+    });
+    g.fillStyle = C.gold; g.font = "13px JetBrains Mono, monospace"; g.fillText(c.summary.length > 64 ? c.summary.slice(0, 63) + "…" : c.summary, 16, MH - 14);
+  },
   riskImprove(g) {
     const h = D.improve && D.improve.history; frame(g, "Self-improve log", "every Sunday");
     if (!h || !h.length) return empty(g, "Each Sunday the crypto desk retunes itself on recent data, and keeps the change only if it wins on days it never saw.");
@@ -379,8 +393,8 @@ const DESKS = [
     screens: ["revGauges", "revBook"] },
   { key: "research", name: "Research Lab", sub: "nightly backtests on real history", pos: [0, 0, 14], color: 0xc58bff, robots: 1,
     screens: ["labVerdict", "labTurtle", "labRev"] },
-  { key: "risk", name: "Risk Office · NOVA", sub: "firm-wide limits & self-improve", pos: [0, 0, -15], color: 0xff4fa3, robots: 1,
-    screens: ["riskFirm", "riskImprove"] },
+  { key: "risk", name: "Risk Office · SENTINEL", sub: "the council decides who may trade", pos: [0, 0, -15], color: 0xff4fa3, robots: 1,
+    screens: ["riskFirm", "riskCouncil", "riskImprove"] },
 ];
 
 const renderer = new THREE.WebGLRenderer({ canvas: $("gl"), antialias: true });
@@ -542,9 +556,14 @@ function drawSigns() {
       const col = "#" + s.d.color.toString(16).padStart(6, "0");
       g.fillStyle = col; g.fillRect(0, 30, 1024, 6);
       g.fillStyle = "#ecebff"; g.font = "700 64px Chakra Petch, sans-serif"; g.fillText(s.d.name.toUpperCase(), 512, 112);
-      const v = deskPnl(s.d.key);
-      g.font = "500 38px JetBrains Mono, monospace";
-      if (v != null) { g.fillStyle = v >= 0 ? "#3ef0d0" : "#ff4fa3"; g.fillText(signed(v) + "  ·  " + deskOpen(s.d.key) + " open", 512, 182); }
+      const v = deskPnl(s.d.key), cs = council(s.d.key);
+      g.font = "500 36px JetBrains Mono, monospace";
+      if (cs) {
+        const st = cs.status, pl = v != null ? "  ·  " + signed(v) : "";
+        const w1 = g.measureText(st).width, w2 = g.measureText(pl).width, x0 = 512 - (w1 + w2) / 2;
+        g.textAlign = "left"; g.fillStyle = STATUS_COL[st]; g.fillText(st, x0, 182);
+        g.fillStyle = v == null || v >= 0 ? "#3ef0d0" : "#ff4fa3"; g.fillText(pl, x0 + w1, 182); g.textAlign = "center";
+      } else if (v != null) { g.fillStyle = v >= 0 ? "#3ef0d0" : "#ff4fa3"; g.fillText(signed(v) + "  ·  " + deskOpen(s.d.key) + " open", 512, 182); }
       else { g.fillStyle = "#9f9bd8"; g.fillText(s.d.sub.split("·")[0].trim(), 512, 182); }
     }
     s.t.needsUpdate = true;
@@ -625,10 +644,15 @@ function panelFor(d) {
     return h + `</table>`;
   }
   if (k === "risk") {
+    const c = D.council;
+    if (c) h += `<div class="sub" style="color:var(--gold)">${esc(c.summary)}</div><div class="feed">` + Object.values(c.strategies).map(st => `<div><b style="color:${STATUS_COL[st.status]}">${st.status}</b> ${esc(st.name)}<br>${esc(st.reasons.join(" · "))}</div>`).join("") + `</div>`;
     h += `<table>` + ["crypto", "options", "turtle", "reversion"].map(z => `<tr><td>${z}</td><td class="${(deskPnl(z) || 0) >= 0 ? "pos" : "neg"}">${signed(deskPnl(z) || 0)} · ${deskOpen(z)} open</td></tr>`).join("") + `</table>`;
     h += `<div class="sub">Crypto loss brake −5%/day · profit lock +6%/day · 0DTE stops after 2 losses/day · kill switch: add a STOP file to the repo</div>`;
     return h;
   }
+  const cs = council(k);
+  if (cs) h += `<div class="feed"><div><b style="color:${STATUS_COL[cs.status]}">SENTINEL: ${cs.status}</b>${cs.status === "PROBATION" ? " (half size)" : ""}<br>${esc(cs.reasons.join(" · "))}</div></div>`;
+  else h += `<div class="sub">Not graded yet. Until SENTINEL rules, this desk doesn't open trades.</div>`;
   if (!x) return h + `<div class="sub">This desk hasn't posted yet. It shows up here after its first scheduled run.</div>`;
   const pnl = deskPnl(k);
   h += `<table><tr><td>Paper P&amp;L</td><td class="${pnl >= 0 ? "pos" : "neg"}">${signed(pnl)}</td></tr>`;

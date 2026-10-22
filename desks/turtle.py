@@ -47,12 +47,15 @@ def on_bar(book: Book, sym, hist, cfg=CFG, executor=None):
     if not lv or not lv["atr"]:
         return
     if b.close > lv["hi"] and b.close > lv["ema"]:
+        if cfg.get("block"):
+            book.log(b.ts, sym, "veto", f"{sym} broke out, but {cfg['block']}")
+            return
         if len(book.positions) >= cfg["max_positions"]:
             book.log(b.ts, sym, "veto", f"{sym} broke out but {cfg['max_positions']} positions already open")
             return
         eq = book.equity()
         risk_unit = cfg["stop_atr"] * lv["atr"]
-        qty = eq * cfg["risk_pct"] / risk_unit
+        qty = eq * cfg["risk_pct"] * cfg.get("size_mult", 1.0) / risk_unit
         cap = min(eq * cfg["max_pos_pct"], book.cash * 0.98)
         if qty * b.close > cap:
             qty = cap / b.close

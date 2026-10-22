@@ -33,6 +33,9 @@ jobs:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
         run: python cloud/research.py
+      - name: SENTINEL grades every strategy
+        if: always()
+        run: python cloud/council.py
       - name: Save results
         if: always()
         run: bash cloud/sync.sh "nightly lab"

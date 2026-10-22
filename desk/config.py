@@ -48,6 +48,7 @@ class DeskConfig:
     max_hold_bars: int = 48
 
     timeframe_min: int = 15            # bar size. Fees decide this, see README
+    council_block: str | None = None   # set by SENTINEL when this desk is benched
     symbols: list = field(default_factory=lambda: ["BTC/USD", "ETH/USD", "SOL/USD"])
 
     @property

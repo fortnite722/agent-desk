@@ -22,8 +22,18 @@ def now():
     return datetime.fromisoformat(fake) if fake else datetime.now(timezone.utc)
 
 
+def council_cfg(key, base):
+    from cloud.council import status
+    st, mult, why = status(key)
+    cfg = dict(base, size_mult=mult)
+    if st == "BENCHED":
+        cfg["block"] = f"BENCHED by SENTINEL ({why})"
+    print(f"council: {key} desk is {st}")
+    return cfg, st
+
+
 def run_turtle():
-    cfg = turtle.CFG
+    cfg, council = council_cfg("turtle", turtle.CFG)
     path = os.path.join(ROOT, "state", "turtle", "book.json")
     book = Book.load(path, "turtle", cfg["cash"], cfg["fee_pct"], cfg["slip_pct"])
     seen = book.__dict__.setdefault("seen", {})
@@ -56,12 +66,12 @@ def run_turtle():
                    "stop": p["stop"] if p else None, "bars": tail}
     book.equity_log.append([now().isoformat(), round(book.equity(), 4)])
     book.save(path)
-    write_desk_json("turtle", book, {k: v for k, v in cfg.items() if k != "symbols"}, {"symbols": view})
+    write_desk_json("turtle", book, {k: v for k, v in cfg.items() if k != "symbols"}, {"symbols": view, "council": council})
     print(f"turtle: equity ${book.equity():.2f}, {len(book.positions)} open, {len(book.trades)} trades")
 
 
 def run_reversion():
-    cfg = reversion.CFG
+    cfg, council = council_cfg("reversion", reversion.CFG)
     path = os.path.join(ROOT, "state", "reversion", "book.json")
     book = Book.load(path, "reversion", cfg["cash"], cfg["fee_pct"], cfg["slip_pct"])
     ny = now().astimezone(NY)
@@ -98,7 +108,7 @@ def run_reversion():
         book.seen_day = str(today)
     book.equity_log.append([now().isoformat(), round(book.equity(), 4)])
     book.save(path)
-    write_desk_json("reversion", book, {k: v for k, v in cfg.items() if k != "symbols"}, {"symbols": view})
+    write_desk_json("reversion", book, {k: v for k, v in cfg.items() if k != "symbols"}, {"symbols": view, "council": council})
     print(f"reversion: {'acted' if traded else 'watched'}; equity ${book.equity():.2f}, {len(book.positions)} open")
 
 

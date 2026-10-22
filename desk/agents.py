@@ -292,6 +292,8 @@ class Nova:
     def approve(self, symbol, side, price, risk_per_unit, equity, cash, open_count, bar_i) -> dict:
         c = self.cfg
         def no(why): return {"ok": False, "why": why}
+        if getattr(c, "council_block", None):
+            return no(c.council_block)
         if side == "short" and not c.allow_short:
             return no("can't short in a cash account, standing down")
         if self.desk_closed:

@@ -40,7 +40,10 @@ def on_bar(book: Book, sym, hist, cfg=CFG, executor=None):
     if not lv or lv["rsi"] is None:
         return
     if lv["rsi"] < cfg["rsi_entry"] and b.close > lv["sma200"]:
-        budget = min(book.equity() * cfg["alloc"], book.cash * 0.99)
+        if cfg.get("block"):
+            book.log(b.ts, sym, "veto", f"{sym} RSI(2) {lv['rsi']:.1f} dip, but {cfg['block']}")
+            return
+        budget = min(book.equity() * cfg["alloc"] * cfg.get("size_mult", 1.0), book.cash * 0.99)
         if budget < 1.0:
             return
         book.buy(b.ts, sym, budget / b.close, b.close, {"days": 0},

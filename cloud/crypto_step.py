@@ -51,6 +51,13 @@ def main():
     os.makedirs(SD, exist_ok=True)
     os.makedirs(DOCS, exist_ok=True)
     cfg = load_cfg()
+    from cloud.council import status as council_status
+    st, mult, why = council_status("crypto")
+    if st == "BENCHED":
+        cfg.council_block = f"BENCHED by SENTINEL ({why})"
+    else:
+        cfg.risk_per_trade_pct *= mult
+    print(f"council: crypto desk is {st}")
     fresh = not os.path.exists(PKL)
     if fresh:
         desk = Desk(cfg, PaperBroker(cfg.starting_cash, 0, 0))
