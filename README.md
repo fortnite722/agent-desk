@@ -2,6 +2,18 @@
 
 **Want it running 24/7 in the cloud for free? Follow `SETUP_CLOUD.md`.**
 
+**Beacon Capital HQ** (the walkable 3D office): https://fortnite722.github.io/agent-desk/
+The older Desk City view lives at `/city.html`.
+
+| Desk | Strategy | Schedule |
+|---|---|---|
+| Crypto Desk | 6-agent VWAP/EMA desk, 1-hour bars, 6 coins | every 15 min |
+| QQQ 0DTE Desk | best setup from the nightly Pattern Lab, 1 contract | market hours |
+| Turtle Desk | Donchian 20/10 breakouts + ATR trailing stop, 4-hour crypto | hourly |
+| Reversion Desk | Connors RSI(2) dips above the 200-day, SPY/QQQ/IWM | 3:50pm ET |
+| Research Lab | Pattern Lab + real-history backtests of every desk | weeknights |
+| Risk Office | firm-wide brakes, self-improve log | always |
+
 A six-agent trading desk that runs in **paper mode** (fake money). Each agent has one job, and every decision gets written down. That way, when you post results, they're real.
 
 | Agent | Job |

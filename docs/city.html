@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Desk City Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* One column on phones, two from 980px. Night-city look, same in every theme. */
+:root {
+  color-scheme: dark;
+  --night: #0b0a22; --deck: #15133a; --deck-2: #1d1a4d; --line: #2e2a6e;
+  --ink: #e9e7ff; --ink-dim: #9c98d6;
+  --call: #3ef0d0; --put: #ff4fa3; --vault: #ffc457; --qqq: #8a7dff;
+  --f-display: "Chakra Petch", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--night); color: var(--ink); margin: 0; }
+body { font: 14px/1.5 var(--f-body);
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px)); }
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 14px; padding-top: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; justify-content: space-between; }
+.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+h1 { font: 700 clamp(26px, 6vw, 40px)/1 var(--f-display); letter-spacing: .02em; margin: 0; text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(62,240,208,.35); }
+.live { display: inline-flex; align-items: center; gap: 6px; font: 700 11px var(--f-mono); letter-spacing: .1em; color: var(--call); }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; animation: blink 1.6s infinite; }
+.live.stale { color: var(--put); }
+@keyframes blink { 50% { opacity: .35; } }
+.chip { font: 600 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 6px 9px; border-radius: 4px;
+  border: 1px solid var(--line); color: var(--ink-dim); background: var(--deck); }
+.chip.gold { color: var(--vault); border-color: rgba(255,196,87,.45); }
+.upd { font: 12px var(--f-mono); color: var(--ink-dim); }
+.grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 980px) { .grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); } }
+.col { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.panel { background: var(--deck); border: 1px solid var(--line); border-radius: 10px; padding: 14px; min-width: 0; }
+.panel h2 { font: 700 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim);
+  margin: 0 0 12px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stat { background: var(--deck); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.stat .k { font: 600 10.5px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
+.stat .v { font: 700 22px/1.2 var(--f-display); font-variant-numeric: tabular-nums; }
+.pos { color: var(--call); } .neg { color: var(--put); } .gold { color: var(--vault); }
+.city { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line);
+  height: clamp(320px, 56vw, 520px); background: radial-gradient(120% 90% at 50% 10%, #241f66 0%, var(--night) 70%); touch-action: pan-y; }
+.city canvas { display: block; width: 100%; height: 100%; }
+.tag { position: absolute; transform: translate(-50%, -100%); pointer-events: none; text-align: center;
+  font: 600 10.5px/1.25 var(--f-mono); background: rgba(11,10,34,.86); border: 1px solid var(--line);
+  border-radius: 5px; padding: 4px 7px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tag b { font: 700 11px var(--f-display); letter-spacing: .06em; display: block; }
+.tag.long, .tag.open { border-color: var(--call); }
+.tag.qqq b { color: var(--qqq); }
+.vaulttag { border-color: rgba(255,196,87,.6); }
+.vaulttag b { color: var(--vault); font-size: 15px; }
+.banner { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); font: 700 12px var(--f-display); letter-spacing: .1em;
+  padding: 6px 12px; border-radius: 6px; background: rgba(255,79,163,.16); border: 1px solid var(--put); color: #ffd2e8;
+  text-transform: uppercase; max-width: calc(100% - 24px); text-align: center; }
+.banner.lock { background: rgba(255,196,87,.14); border-color: var(--vault); color: #ffe7b8; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-dim); padding: 20px; text-align: center; }
+.scanner { display: grid; gap: 8px; }
+.scan { display: grid; grid-template-columns: 64px minmax(0,1fr) auto; gap: 4px 10px; align-items: center;
+  padding: 8px 10px; border-radius: 8px; background: var(--deck-2); border: 1px solid transparent; cursor: pointer; }
+.scan.sel { border-color: var(--line); box-shadow: inset 3px 0 0 var(--call); }
+.scan:focus-visible, button:focus-visible { outline: 2px solid var(--call); outline-offset: 2px; }
+.scan .sym { font: 700 14px var(--f-display); letter-spacing: .04em; }
+.bar { height: 8px; border-radius: 99px; background: #0f0d2b; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, rgba(62,240,208,.35), var(--call)); transition: width .4s; }
+.pill { font: 700 10px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-radius: 99px;
+  border: 1px solid var(--line); color: var(--ink-dim); white-space: nowrap; }
+.pill.long, .pill.open { color: var(--night); background: var(--call); border-color: var(--call); }
+.pill.charging { color: var(--call); border-color: var(--call); }
+.scan .meta { grid-column: 1 / -1; font: 11px var(--f-mono); color: var(--ink-dim); display: flex; gap: 12px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.chartbox { position: relative; height: 200px; }
+.chartbox canvas { width: 100%; height: 100%; display: block; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font: 11px var(--f-mono); color: var(--ink-dim); }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 2px; margin-right: 5px; vertical-align: middle; background: currentColor; }
+.feed { display: grid; gap: 6px; max-height: 380px; overflow-y: auto; font: 12px/1.45 var(--f-mono); }
+.ev { display: grid; grid-template-columns: 74px 52px minmax(0,1fr); gap: 8px; padding: 6px 8px; border-radius: 6px; background: var(--deck-2); }
+.ev .t { color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.ev .a { font-weight: 600; }
+.ev .m { min-width: 0; overflow-wrap: anywhere; }
+.ev.veto, .ev.brake { box-shadow: inset 3px 0 0 var(--put); }
+.ev.win { box-shadow: inset 3px 0 0 var(--vault); }
+.ev.fill, .ev.entry { box-shadow: inset 3px 0 0 var(--call); }
+.opt { display: grid; gap: 8px; }
+.opt .setup { font: 600 12.5px var(--f-mono); background: var(--deck-2); padding: 8px 10px; border-radius: 8px; overflow-wrap: anywhere; }
+.opt .poscard { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--call); background: rgba(62,240,208,.06); font: 13px var(--f-mono); }
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font: 12px var(--f-mono); font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { color: var(--ink-dim); font-weight: 600; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; }
+td.r, th.r { text-align: right; }
+.empty { color: var(--ink-dim); font-size: 13px; padding: 8px 0; }
+.imp { display: grid; gap: 6px; font: 12px var(--f-mono); }
+.imp div { background: var(--deck-2); padding: 7px 9px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { .live::before { animation: none; } .bar i { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Desk City</h1>
+      <span class="live" id="live">LIVE</span>
+      <span class="chip gold" id="mode">loading</span>
+    </div>
+    <span class="upd" id="upd">waiting for the first update</span>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Crypto bankroll</div><div class="v gold" id="sEq">–</div></div>
+    <div class="stat"><div class="k">Crypto today</div><div class="v" id="sDay">–</div></div>
+    <div class="stat"><div class="k">QQQ options P&amp;L</div><div class="v" id="sOpt">–</div></div>
+    <div class="stat"><div class="k">All trades W / L</div><div class="v" id="sWL">–</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="city" id="city">
+        <canvas id="gl" aria-label="3D view: one tower per bot market, the vault in the middle"></canvas>
+        <div id="tags"></div>
+        <div class="banner" id="banner" hidden></div>
+      </div>
+      <div class="panel">
+        <h2><span id="chartTitle">Chart</span><span class="legend"><span style="color:var(--ink)">price</span><span style="color:var(--vault)">VWAP</span><span style="color:var(--qqq)">EMA50</span></span></h2>
+        <div class="chartbox"><canvas id="chart" aria-label="Price chart for the selected coin"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Crypto bankroll over time</h2>
+        <div class="chartbox"><canvas id="eqchart" aria-label="Crypto desk equity over time"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Trades</h2>
+        <div class="scroll" id="trades"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="panel">
+        <h2>QQQ 0DTE bot</h2>
+        <div class="opt" id="opt"><div class="empty">The options bot posts here once it runs its first market day.</div></div>
+      </div>
+      <div class="panel">
+        <h2>Crypto scanner <span class="chip">tap to chart</span></h2>
+        <div class="scanner" id="scanner"><div class="empty">Waiting for the first crypto tick.</div></div>
+      </div>
+      <div class="panel">
+        <h2>Desk chatter</h2>
+        <div class="feed" id="feed"></div>
+      </div>
+      <div class="panel">
+        <h2>Self-improve log</h2>
+        <div class="imp" id="imp"><div class="empty">First weekly tune-up runs Sunday.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const AG = { ATLAS: "#5aa9ff", VEGA: "#c58bff", ORION: "#7ef0ff", TITAN: "#ffc457", LUNA: "#3ef0d0", NOVA: "#ff4fa3", QQQ: "#8a7dff" };
+const $ = id => document.getElementById(id);
+const money = v => (v < 0 ? "-$" : "$") + Math.abs(+v).toFixed(2);
+const signed = v => (v >= 0 ? "+" : "-") + "$" + Math.abs(+v).toFixed(2);
+const px = v => v == null ? "–" : v >= 1000 ? Math.round(v).toLocaleString() : v >= 1 ? (+v).toFixed(2) : (+v).toFixed(4);
+const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const short = s => s.replace("/USD", "");
+let C = null, O = null, I = null, sel = null, three = null, towerKeys = [];
+
+async function getJSON(name) {
+  try { const r = await fetch(name + "?t=" + Date.now(), { cache: "no-store" }); return r.ok ? await r.json() : null; }
+  catch (e) { return null; }
+}
+
+// ---------------- 3D city
+function buildCity(keys) {
+  if (!window.THREE) throw new Error("no three");
+  const cv = $("gl"), box = $("city");
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+  const scene = new THREE.Scene(); scene.fog = new THREE.Fog(0x0b0a22, 26, 70);
+  const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
+  scene.add(new THREE.AmbientLight(0x6a63ff, 0.55));
+  const key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(8, 20, 10); scene.add(key);
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(40, 64), new THREE.MeshLambertMaterial({ color: 0x120f38 }));
+  ground.rotation.x = -Math.PI / 2; scene.add(ground);
+  const grid = new THREE.GridHelper(80, 40, 0x2e2a6e, 0x1b1850); grid.position.y = 0.01; scene.add(grid);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(9.5, 0.08, 8, 96), new THREE.MeshBasicMaterial({ color: 0x8a7dff }));
+  ring.rotation.x = Math.PI / 2; ring.position.y = 0.06; scene.add(ring);
+  const wc = document.createElement("canvas"); wc.width = 64; wc.height = 128;
+  const wx = wc.getContext("2d"); wx.fillStyle = "#16134a"; wx.fillRect(0, 0, 64, 128);
+  for (let y = 4; y < 128; y += 8) for (let x = 4; x < 64; x += 8) {
+    wx.fillStyle = Math.random() < 0.55 ? "#ffe2a0" : Math.random() < 0.5 ? "#7ef0ff" : "#221e5c"; wx.fillRect(x, y, 4, 4);
+  }
+  const winTex = new THREE.CanvasTexture(wc); winTex.wrapS = winTex.wrapT = THREE.RepeatWrapping;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  for (let k = 0; k < 90; k++) {
+    const a = rnd(0, Math.PI * 2), r = rnd(17, 36), h = rnd(2, 10);
+    const t = winTex.clone(); t.needsUpdate = true; t.repeat.set(1, h / 4);
+    const b = new THREE.Mesh(new THREE.BoxGeometry(rnd(1.2, 2.6), h, rnd(1.2, 2.6)), new THREE.MeshLambertMaterial({ map: t, color: 0x8f88ff }));
+    b.position.set(Math.cos(a) * r, h / 2, Math.sin(a) * r); scene.add(b);
+  }
+  const towers = keys.map((s, k) => {
+    const a = (k / keys.length) * Math.PI * 2 + 0.3, x = Math.cos(a) * 6.4, z = Math.sin(a) * 6.4;
+    const g = new THREE.Group(); g.position.set(x, 0, z);
+    const isQ = s === "QQQ", h = isQ ? 8.5 : 5 + (k % 3) * 0.9;
+    const t = winTex.clone(); t.needsUpdate = true; t.repeat.set(1, h / 3);
+    const col = isQ ? 0xa79cff : 0xb9b3ff;
+    const body = new THREE.Mesh(new THREE.BoxGeometry(1.6, h, 1.6), new THREE.MeshLambertMaterial({ map: t, color: col }));
+    body.position.y = h / 2; g.add(body);
+    const crown = new THREE.Mesh(new THREE.BoxGeometry(1, 1.1, 1), new THREE.MeshLambertMaterial({ map: t, color: col }));
+    crown.position.y = h + 0.55; g.add(crown);
+    const halo = new THREE.Mesh(new THREE.TorusGeometry(1.15, 0.05, 8, 48), new THREE.MeshBasicMaterial({ color: isQ ? 0x8a7dff : 0x3ef0d0, transparent: true, opacity: 0.25 }));
+    halo.rotation.x = Math.PI / 2; halo.position.y = h + 0.1; g.add(halo);
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 30, 16, 1, true),
+      new THREE.MeshBasicMaterial({ color: 0x3ef0d0, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+    beam.position.y = h + 15.6; g.add(beam);
+    scene.add(g);
+    return { g, h, beam, halo, target: 0 };
+  });
+  const vault = new THREE.Group();
+  const drum = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 1.6, 24), new THREE.MeshLambertMaterial({ color: 0xc9733f }));
+  drum.position.y = 0.8; vault.add(drum);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xfff1d6 }));
+  dome.position.y = 1.6; vault.add(dome);
+  const glow = new THREE.PointLight(0xffc457, 1.2, 16); glow.position.y = 3; vault.add(glow);
+  scene.add(vault);
+  const drones = Object.keys(AG).slice(0, 6).map((n, k) => {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(0.26, 16, 12), new THREE.MeshBasicMaterial({ color: AG[n] })); scene.add(m);
+    return { m, k };
+  });
+  let yaw = 0.5, pitch = 0.45, dragging = false, lx = 0, ly = 0, idle = 0;
+  cv.addEventListener("pointerdown", e => { dragging = true; lx = e.clientX; ly = e.clientY; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", e => { if (!dragging) return; yaw -= (e.clientX - lx) * 0.006; pitch = Math.max(0.15, Math.min(1.2, pitch + (e.clientY - ly) * 0.004)); lx = e.clientX; ly = e.clientY; idle = 0; });
+  cv.addEventListener("pointerup", () => { dragging = false; });
+  const tagsEl = $("tags");
+  const tags = keys.map(() => { const d = document.createElement("div"); d.className = "tag"; tagsEl.appendChild(d); return d; });
+  const vaultTag = document.createElement("div"); vaultTag.className = "tag vaulttag"; tagsEl.appendChild(vaultTag);
+  function resize() { const w = box.clientWidth, h = box.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+  addEventListener("resize", resize); resize();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const v3 = new THREE.Vector3();
+  const project = (o, y) => { o.getWorldPosition(v3); v3.y += y; v3.project(cam); return [(v3.x * .5 + .5) * box.clientWidth, (-v3.y * .5 + .5) * box.clientHeight, v3.z < 1]; };
+  let t0 = performance.now();
+  (function loop(now) {
+    const dt = Math.min(0.05, (now - t0) / 1000); t0 = now; idle += dt;
+    if (!dragging && idle > 2 && !reduce) yaw += dt * 0.05;
+    const dist = box.clientWidth < 520 ? 31 : 26;
+    cam.position.set(Math.sin(yaw) * Math.cos(pitch) * dist, Math.sin(pitch) * dist + 2, Math.cos(yaw) * Math.cos(pitch) * dist);
+    cam.lookAt(0, 3, 0);
+    drones.forEach(d => { const a = now / 1000 * (reduce ? 0 : 0.35) + d.k * Math.PI / 3; d.m.position.set(Math.cos(a) * 3.4, 3.4 + Math.sin(a * 2) * .3, Math.sin(a) * 3.4); });
+    towers.forEach(t => { t.halo.rotation.z += dt * 0.6; const b = t.beam.material; b.opacity += (t.target - b.opacity) * Math.min(1, dt * 3); });
+    renderer.render(scene, cam);
+    towers.forEach((t, k) => { const [x, y, ok] = project(t.g, t.h + 2.1); tags[k].style.left = x + "px"; tags[k].style.top = y + "px"; tags[k].hidden = !ok; });
+    const [vx, vy] = project(vault, 4.2); vaultTag.style.left = vx + "px"; vaultTag.style.top = vy + "px";
+    requestAnimationFrame(loop);
+  })(performance.now());
+  return { towers, tags, vaultTag };
+}
+
+// ---------------- charts
+function cssv(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function setupCanvas(cv) {
+  const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+  cv.width = r.width * dpr; cv.height = r.height * dpr;
+  const g = cv.getContext("2d"); g.scale(dpr, dpr); return [g, r.width, r.height];
+}
+function lineChart(cv, series, opts = {}) {
+  const [g, W, H] = setupCanvas(cv);
+  const padL = 6, padR = 64, padT = 8, padB = 18;
+  const vals = series.flatMap(s => s.pts.map(p => p[1])).filter(v => v != null && isFinite(v));
+  if (vals.length < 2) { g.fillStyle = cssv("--ink-dim"); g.font = "12px IBM Plex Sans, sans-serif"; g.fillText(opts.empty || "Not enough data yet", 10, H / 2); return; }
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.08 || Math.abs(hi) * 0.01 || 1; lo -= pad; hi += pad;
+  const n = Math.max(...series.map(s => s.pts.length));
+  const X = i => padL + (i / Math.max(1, n - 1)) * (W - padL - padR), Y = v => padT + (1 - (v - lo) / (hi - lo)) * (H - padT - padB);
+  g.font = "10px JetBrains Mono, monospace";
+  for (let q = 0; q <= 3; q++) {
+    const v = lo + (hi - lo) * q / 3, y = Y(v);
+    g.strokeStyle = cssv("--line"); g.globalAlpha = .5; g.beginPath(); g.moveTo(padL, y); g.lineTo(W - padR, y); g.stroke(); g.globalAlpha = 1;
+    g.fillStyle = cssv("--ink-dim"); g.fillText(opts.fmt ? opts.fmt(v) : px(v), W - padR + 6, y + 3);
+  }
+  if (opts.base != null) { g.setLineDash([3, 4]); g.strokeStyle = cssv("--ink-dim"); g.beginPath(); g.moveTo(padL, Y(opts.base)); g.lineTo(W - padR, Y(opts.base)); g.stroke(); g.setLineDash([]); }
+  series.forEach(s => {
+    if (s.area) {
+      g.beginPath(); s.pts.forEach((p, i) => i ? g.lineTo(X(i), Y(p[1])) : g.moveTo(X(i), Y(p[1])));
+      g.lineTo(X(s.pts.length - 1), H - padB); g.lineTo(X(0), H - padB); g.closePath();
+      const gr = g.createLinearGradient(0, padT, 0, H - padB); gr.addColorStop(0, s.area); gr.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gr; g.fill();
+    }
+    g.strokeStyle = s.color; g.lineWidth = s.w || 1.5; g.beginPath();
+    s.pts.forEach((p, i) => i ? g.lineTo(X(i), Y(p[1])) : g.moveTo(X(i), Y(p[1]))); g.stroke();
+  });
+  (opts.marks || []).forEach(m => {
+    g.fillStyle = m.color; g.beginPath();
+    const x = X(m.i), y = Y(m.v);
+    if (m.up) { g.moveTo(x, y - 7); g.lineTo(x - 5, y + 2); g.lineTo(x + 5, y + 2); } else { g.moveTo(x, y + 7); g.lineTo(x - 5, y - 2); g.lineTo(x + 5, y - 2); }
+    g.fill();
+  });
+  const s0 = series[0], last = s0.pts[s0.pts.length - 1];
+  g.fillStyle = cssv("--ink"); g.beginPath(); g.arc(X(s0.pts.length - 1), Y(last[1]), 3, 0, 7); g.fill();
+  if (s0.pts[0][0]) { g.fillStyle = cssv("--ink-dim"); g.fillText(String(s0.pts[0][0]).slice(5, 16).replace("T", " "), padL, H - 4); }
+}
+
+function drawCharts() {
+  if (C && sel && C.symbols[sel]) {
+    const b = C.symbols[sel].bars || [];
+    $("chartTitle").textContent = `${sel} · ${C.timeframe_min}-min`;
+    const idx = t => b.findIndex(r => r[0] >= t);
+    const marks = [];
+    (C.trades || []).filter(t => t.symbol === sel).forEach(t => {
+      const i1 = idx(t.entry_t), i2 = idx(t.exit_t);
+      if (i1 >= 0) marks.push({ i: i1, v: +t.entry, up: true, color: cssv("--call") });
+      if (i2 >= 0) marks.push({ i: i2, v: +t.exit, up: false, color: +t.pnl > 0 ? cssv("--vault") : cssv("--put") });
+    });
+    lineChart($("chart"), [
+      { pts: b.map(r => [r[0], r[1]]), color: cssv("--ink"), w: 1.8, area: "rgba(62,240,208,.16)" },
+      { pts: b.map(r => [r[0], r[2]]), color: cssv("--vault"), w: 1.3 },
+      { pts: b.map(r => [r[0], r[3]]), color: cssv("--qqq"), w: 1.3 }], { marks });
+  }
+  if (C) lineChart($("eqchart"), [{ pts: C.equity_curve || [], color: cssv("--vault"), w: 2, area: "rgba(255,196,87,.16)" }],
+    { base: C.start_cash, fmt: v => "$" + v.toFixed(2), empty: "The bankroll line starts after a few ticks." });
+}
+
+// ---------------- render
+function ago(iso) {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  return s < 90 ? "just now" : s < 3600 ? Math.round(s / 60) + " min ago" : s < 86400 ? Math.round(s / 3600) + " h ago" : Math.round(s / 86400) + " days ago";
+}
+function render() {
+  const updates = [C && C.updated, O && O.updated].filter(Boolean).map(t => new Date(t).getTime());
+  const newest = updates.length ? Math.max(...updates) : null;
+  $("upd").textContent = newest ? "updated " + ago(new Date(newest).toISOString()) : "waiting for the first update";
+  $("live").classList.toggle("stale", !newest || Date.now() - newest > 40 * 60 * 1000);
+  $("mode").textContent = C ? (C.mode === "alpaca-paper" ? "Alpaca paper · fake money, real fills" : "shadow · simulated fills") : "no data yet";
+
+  // stats
+  const allTrades = [...((C && C.trades) || []).map(t => +t.pnl), ...((O && O.trades) || []).map(t => +t.pnl)];
+  if (C) {
+    $("sEq").textContent = money(C.equity);
+    const day = Object.values(C.symbols).reduce((a, s) => a + (+s.day_pnl || 0), 0);
+    $("sDay").textContent = signed(day); $("sDay").className = "v " + (day >= 0 ? "pos" : "neg");
+  }
+  if (O) { const n = O.total.net; $("sOpt").textContent = signed(n); $("sOpt").className = "v " + (n >= 0 ? "pos" : "neg"); }
+  const cw = C ? C.scoreboard.wins : 0, cl = C ? C.scoreboard.losses : 0;
+  const ow = O ? O.total.wins : 0, ol = O ? O.total.trades - O.total.wins : 0;
+  $("sWL").textContent = `${cw + ow} / ${cl + ol}`;
+
+  // banner
+  const bn = $("banner"); bn.hidden = !(C && C.brake);
+  if (C && C.brake) { bn.textContent = C.brake; bn.classList.toggle("lock", C.brake.startsWith("PROFIT")); }
+
+  // scanner
+  if (C) {
+    const syms = Object.keys(C.symbols); if (!sel) sel = syms[0];
+    $("scanner").innerHTML = syms.map(s => {
+      const d = C.symbols[s], st = d.status;
+      const w = st === "long" || st === "short" ? 100 : Math.max(0, Math.min(100, d.charge || 0));
+      return `<div class="scan${s === sel ? " sel" : ""}" data-s="${s}" role="button" tabindex="0">
+        <span class="sym">${short(s)}</span><div class="bar"><i style="width:${w}%"></i></div>
+        <span class="pill ${st}">${st === "long" ? "in trade" : st}</span>
+        <div class="meta"><span>${px(d.price)}</span><span>${st === "long" ? "stop " + px(d.stop) : Math.round(d.charge || 0) + "% charged"}</span>
+        <span>today <span class="${d.day_pnl >= 0 ? "pos" : "neg"}">${signed(d.day_pnl)}</span></span></div></div>`;
+    }).join("");
+    document.querySelectorAll(".scan").forEach(el => {
+      const pick = () => { sel = el.dataset.s; render(); };
+      el.onclick = pick; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } };
+    });
+  }
+
+  // options
+  if (O) {
+    const p = O.open;
+    $("opt").innerHTML = `<div class="setup">${esc(O.setup)}<br><span class="${O.status === "survivor" ? "pos" : "gold"}">${esc(O.status)}</span></div>
+      ${p ? `<div class="poscard">OPEN · ${esc(p.sym)}<br>bought $${(+p.entry).toFixed(2)} · now $${(+p.mark).toFixed(2)} ·
+        <span class="${p.mark >= p.entry ? "pos" : "neg"}">${signed((p.mark - p.entry) * 100)}</span></div>` : `<div class="empty">No open contract. ${O.today_trades} trade(s) today.</div>`}
+      <div class="empty">All-time: ${O.total.trades} trades, ${O.total.wins} wins, <span class="${O.total.net >= 0 ? "pos" : "neg"}">${signed(O.total.net)}</span> per 1 contract</div>`;
+  }
+
+  // feed
+  const evs = [];
+  if (C) C.events.forEach(e => evs.push({ t: e.t, who: e.agent, kind: e.kind, msg: (e.sym !== "DESK" ? short(e.sym) + " " : "") + e.msg, win: e.kind === "close" && e.data && e.data.pnl > 0 }));
+  if (O) O.events.forEach(e => evs.push({ t: e.t, who: "QQQ", kind: e.kind, msg: e.msg, win: e.kind === "exit" && e.pnl > 0 }));
+  evs.sort((a, b) => (a.t < b.t ? 1 : -1));
+  $("feed").innerHTML = evs.length ? evs.slice(0, 60).map(e => `<div class="ev ${e.kind}${e.win ? " win" : ""}"><span class="t">${esc(String(e.t).slice(5, 16).replace("T", " "))}</span>
+    <span class="a" style="color:${AG[e.who] || "#fff"}">${e.who}</span><span class="m">${esc(e.msg)}</span></div>`).join("")
+    : `<div class="empty">The agents start talking after the first tick.</div>`;
+
+  // trades
+  const rows = [
+    ...((C && C.trades) || []).map(t => ({ t: t.exit_t, what: short(t.symbol), side: t.side, in: +t.entry, out: +t.exit, pnl: +t.pnl, why: t.why })),
+    ...((O && O.trades) || []).map(t => ({ t: t.exit_t, what: t.symbol.slice(9), side: t.side, in: +t.entry, out: +t.exit, pnl: +t.pnl, why: t.why })),
+  ].sort((a, b) => (a.t < b.t ? 1 : -1)).slice(0, 40);
+  $("trades").innerHTML = rows.length ? `<table><tr><th>When</th><th>What</th><th>Side</th><th class="r">In</th><th class="r">Out</th><th class="r">P&amp;L</th><th>Why</th></tr>` +
+    rows.map(r => `<tr><td>${esc(String(r.t).slice(5, 16).replace("T", " "))}</td><td>${esc(r.what)}</td><td>${esc(r.side)}</td><td class="r">${px(r.in)}</td><td class="r">${px(r.out)}</td>
+      <td class="r ${r.pnl >= 0 ? "pos" : "neg"}">${signed(r.pnl)}</td><td>${esc(r.why)}</td></tr>`).join("") + `</table>`
+    : `<div class="empty">No closed trades yet. The first ones show up here.</div>`;
+
+  // improve
+  if (I && I.history && I.history.length) {
+    $("imp").innerHTML = I.history.slice().reverse().map(h => `<div>${esc(String(h.t).slice(0, 10))} · <span class="${h.promoted ? "pos" : ""}">${h.promoted ? "UPGRADED" : "kept settings"}</span> · tested ${h.tested}<br><span style="color:var(--ink-dim)">${esc(h.why)}</span></div>`).join("");
+  }
+
+  // city
+  const keys = [...(C ? Object.keys(C.symbols) : []), "QQQ"];
+  if (!three && keys.join() !== towerKeys.join()) {
+    towerKeys = keys;
+    try { three = buildCity(keys); } catch (e) { $("city").insertAdjacentHTML("beforeend", '<div class="nogl">3D view needs WebGL. Everything below still updates.</div>'); three = { towers: [] }; }
+  }
+  if (three && three.towers.length) {
+    keys.forEach((s, k) => {
+      const t = three.towers[k], tag = three.tags[k];
+      if (!t) return;
+      if (s === "QQQ") {
+        const open = O && O.open;
+        t.target = open ? 0.6 : 0; t.beam.material.color.set(open && open.mark < open.entry ? 0xff4fa3 : 0x8a7dff);
+        tag.className = "tag qqq" + (open ? " open" : "");
+        tag.innerHTML = `<b>QQQ 0DTE</b>${open ? "holding " + (open.kind === "C" ? "call" : "put") : "watching"} · <span class="${O && O.total.net >= 0 ? "pos" : "neg"}">${O ? signed(O.total.net) : "–"}</span>`;
+      } else {
+        const d = C.symbols[s];
+        t.target = d.status === "long" ? 0.55 : d.status === "charging" ? 0.12 + (d.charge || 0) / 100 * 0.25 : 0;
+        t.beam.material.color.set(d.status === "long" && d.price < d.entry ? 0xff4fa3 : 0x3ef0d0);
+        t.halo.material.opacity = 0.2 + (d.charge || 0) / 100 * 0.6;
+        tag.className = "tag " + d.status;
+        tag.innerHTML = `<b>${short(s)}</b>${d.status === "long" ? "in trade" : d.status} · <span class="${d.day_pnl >= 0 ? "pos" : "neg"}">${signed(d.day_pnl)}</span>`;
+      }
+    });
+    if (C) three.vaultTag.innerHTML = `THE VAULT<b>${money(C.equity)}</b>crypto bankroll`;
+  }
+  drawCharts();
+}
+
+async function refresh() {
+  const [c, o, i] = await Promise.all([getJSON("crypto.json"), getJSON("options.json"), getJSON("improve.json")]);
+  C = c || C; O = o || O; I = i || I;
+  render();
+}
+addEventListener("resize", drawCharts);
+refresh();
+setInterval(refresh, 60000);
+setInterval(() => { if (C || O) $("upd").textContent = "updated " + ago(new Date(Math.max(...[C && C.updated, O && O.updated].filter(Boolean).map(t => new Date(t).getTime()))).toISOString()); }, 20000);
+</script>
+</body>
+</html>
