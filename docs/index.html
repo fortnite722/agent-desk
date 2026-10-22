@@ -76,7 +76,22 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outl
     <h1>Trading Floor</h1>
     <p>Six desks. Every monitor is wired to a live bot. A council decides each night who's allowed to trade. No proof, no trade.</p>
     <div><label for="name">Trader name</label><input type="text" id="name" autocomplete="nickname" placeholder="Matthew" maxlength="24"></div>
-    <button type="submit" id="enter">Enter the floor</button>
+    <button type="submit" id="enter">Launch HQ</button>
+    <div id="engineLine" class="fine"></div>
+    <details id="engineSetup">
+      <summary class="fine" style="cursor:pointer;color:var(--gold)">Connect the engine (one time)</summary>
+      <div style="display:grid;gap:8px;margin-top:8px">
+        <div class="fine">The engine lets this page press "Run" on your bots, so everything due runs the moment you launch and stays on schedule while the page is open.<br>
+        1. Open <b>github.com/settings/personal-access-tokens/new</b><br>
+        2. Repository access: <b>Only select repositories</b> → <b>agent-desk</b><br>
+        3. Permissions → Repository → <b>Actions: Read and write</b><br>
+        4. Generate, copy, paste below.</div>
+        <input type="text" id="token" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+        <button type="button" id="saveToken" style="background:var(--gold)">Save engine key</button>
+        <div class="fine">The key stays in this browser only. It can run this repo's bots and nothing else. Use the Remove button to delete it.</div>
+        <button type="button" id="clearToken" style="background:transparent;color:var(--ink-dim);border:1px solid var(--line)">Remove key</button>
+      </div>
+    </details>
     <div class="fine">Mac: click to look around · WASD to walk · Shift to run · 1–6 jump to a desk · Esc to free the mouse.<br>
     This sign-in only puts your name on the floor. The page and its data are public.</div>
   </form>
@@ -88,7 +103,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outl
     <div class="pill"><div class="k">Open positions</div><div class="v" id="hOpen">–</div></div>
     <div class="pill"><div class="k">Trades</div><div class="v" id="hTrades">–</div></div>
   </div>
-  <div class="pill"><div class="k">On the floor</div><div id="who">–</div></div>
+  <div class="row">
+    <div class="pill"><div class="k">Engine</div><div id="engine" style="font:600 12px var(--f-mono)">off</div></div>
+    <div class="pill"><div class="k">On the floor</div><div id="who">–</div></div>
+  </div>
 </div>
 <div class="hud" id="cross"></div>
 <div class="hud" id="panel" hidden></div>
@@ -692,6 +710,72 @@ function loop(now) {
 }
 addEventListener("resize", () => { renderer.setSize(innerWidth, innerHeight); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); });
 
+// ======================================================================= engine (runs the bots from this page)
+const OWNER = location.hostname.endsWith("github.io") ? location.hostname.split(".")[0] : "fortnite722";
+const REPO = location.pathname.split("/").filter(Boolean)[0] || "agent-desk";
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
+let TOKEN = store.get("beacon-engine-key");
+let engineOn = false, engineMsg = "off", running = 0;
+const minsSince = iso => iso ? (Date.now() - new Date(iso)) / 60000 : 1e9;
+function nyNow() {
+  const p = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "numeric", hour12: false, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
+  const g = t => (p.find(x => x.type === t) || {}).value;
+  return { day: g("weekday"), mins: (+g("hour") % 24) * 60 + (+g("minute")), date: `${g("year")}-${g("month")}-${g("day")}` };
+}
+const JOBS = [
+  { id: "crypto", label: "Crypto desk", file: "crypto-desk.yml", gap: 10,
+    due: () => minsSince(D.crypto && D.crypto.updated) > 14 },
+  { id: "turtle", label: "Turtle desk", file: "strategy-desks.yml", inputs: { desk: "turtle" }, gap: 45,
+    due: () => minsSince(D.turtle && D.turtle.updated) > 55 },
+  { id: "lab", label: "Lab + SENTINEL", file: "nightly-lab.yml", gap: 240,
+    due: () => minsSince(D.council && D.council.updated) > 20 * 60 },
+  { id: "options", label: "QQQ bot", file: "options-bot.yml", gap: 400,
+    due: () => { const n = nyNow(); const wk = !["Sat", "Sun"].includes(n.day);
+      return wk && n.mins >= 9 * 60 + 25 && n.mins < 15 * 60; } },
+  { id: "reversion", label: "Reversion desk", file: "strategy-desks.yml", inputs: { desk: "reversion" }, gap: 30,
+    due: () => { const n = nyNow(); const wk = !["Sat", "Sun"].includes(n.day);
+      return wk && n.mins >= 15 * 60 + 45 && n.mins < 15 * 60 + 58 && minsSince(D.reversion && D.reversion.updated) > 20; } },
+];
+async function dispatch(job) {
+  const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${job.file}/dispatches`, {
+    method: "POST", headers: { Authorization: "Bearer " + TOKEN, Accept: "application/vnd.github+json" },
+    body: JSON.stringify({ ref: "main", ...(job.inputs ? { inputs: job.inputs } : {}) }) });
+  if (r.status === 204) { store.set("beacon-last-" + job.id, String(Date.now())); return true; }
+  if (r.status === 401 || r.status === 403) { engineMsg = "key rejected · reconnect"; engineOn = false; }
+  throw new Error("dispatch " + r.status);
+}
+async function engineTick() {
+  try {
+    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=20`);
+    if (r.ok) running = (await r.json()).total_count || 0;
+  } catch (e) {}
+  if (!TOKEN) { engineMsg = "off · connect once on the launch screen"; return renderEngine(); }
+  engineOn = true;
+  const fired = [];
+  for (const j of JOBS) {
+    const last = +(store.get("beacon-last-" + j.id) || 0);
+    if ((Date.now() - last) / 60000 < j.gap) continue;
+    let due = false; try { due = j.due(); } catch (e) {}
+    if (!due) continue;
+    try { if (await dispatch(j)) fired.push(j.label); } catch (e) { if (!engineOn) return renderEngine(); }
+  }
+  engineMsg = (fired.length ? "started " + fired.join(", ") : "all bots on schedule") + (running ? ` · ${running} running` : "");
+  renderEngine();
+}
+function renderEngine() {
+  $("engine").textContent = engineMsg;
+  $("engine").style.color = engineOn ? "var(--up)" : "var(--ink-dim)";
+  $("engineLine").textContent = TOKEN ? "Engine connected: Launch starts every bot that's due." : "Engine not connected yet: Launch opens the floor, bots run on GitHub's own timer.";
+}
+$("saveToken").addEventListener("click", () => {
+  const v = $("token").value.trim();
+  if (!v.startsWith("github_pat_") && !v.startsWith("ghp_")) { $("engineLine").textContent = "That doesn't look like a GitHub key. It starts with github_pat_."; return; }
+  TOKEN = v; store.set("beacon-engine-key", v); $("token").value = ""; $("engineSetup").open = false; renderEngine();
+});
+$("clearToken").addEventListener("click", () => { TOKEN = null; store.set("beacon-engine-key", null); engineOn = false; engineMsg = "off"; renderEngine(); });
+renderEngine();
+
 // ======================================================================= sign-in
 let saved = ""; try { saved = localStorage.getItem("beacon-name") || ""; } catch (e) {}
 $("name").value = saved;
@@ -701,7 +785,10 @@ $("signin").addEventListener("submit", e => {
   try { localStorage.setItem("beacon-name", n); } catch (e) {}
   $("who").textContent = n + " · " + new Date().toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
   $("gate").hidden = true;
-  if (matchMedia("(pointer: fine)").matches) canvas.requestPointerLock?.();
+  try { document.documentElement.requestFullscreen?.().catch(() => {}); } catch (e) {}
+  if (matchMedia("(pointer: fine)").matches) setTimeout(() => canvas.requestPointerLock?.(), 300);
+  engineTick();
+  if (!window._engine) window._engine = setInterval(engineTick, 60000);
 });
 redrawAll(true);
 refresh();

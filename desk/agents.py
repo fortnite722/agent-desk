@@ -289,7 +289,16 @@ class Nova:
             self.desk_closed = f"PROFIT LOCK: up {pnl_pct:.1%}, clocking out"
         return self.desk_closed
 
-    def approve(self, symbol, side, price, risk_per_unit, equity, cash, open_count, bar_i) -> dict:
+    @staticmethod
+    def conviction(conf: float):
+        """Size follows the strength of the case: A+ setups get more, borderline ones less."""
+        if conf >= 0.75:
+            return 1.5, "A+ conviction, 1.5x size"
+        if conf >= 0.6:
+            return 1.0, "solid setup, normal size"
+        return 0.6, "borderline setup, 0.6x size"
+
+    def approve(self, symbol, side, price, risk_per_unit, equity, cash, open_count, bar_i, confidence=0.6) -> dict:
         c = self.cfg
         def no(why): return {"ok": False, "why": why}
         if getattr(c, "council_block", None):
@@ -308,7 +317,8 @@ class Nova:
         need = c.min_edge_multiple * c.round_trip_cost_pct
         if r_pct < need:
             return no(f"move too small: 1R is {r_pct:.2%}, fees need {need:.2%}")
-        risk_usd = equity * c.risk_per_trade_pct
+        mult, why_size = self.conviction(confidence)
+        risk_usd = equity * c.risk_per_trade_pct * mult
         qty = risk_usd / risk_per_unit
         notional = qty * price
         cap = min(equity * c.max_position_pct, cash * 0.98)
@@ -318,7 +328,7 @@ class Nova:
         if notional < c.min_order_usd:
             return no(f"size ${notional:.2f} below broker minimum")
         return {"ok": True, "qty": qty, "notional": notional, "risk_usd": qty * risk_per_unit,
-                "capped": capped}
+                "capped": capped, "conviction": why_size}
 
     def record_close(self, symbol, pnl, bar_i):
         if pnl < 0:

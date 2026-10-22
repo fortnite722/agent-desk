@@ -230,7 +230,7 @@ class Desk:
         verdict = self.nova.approve(symbol, thesis["side"], bar.close, risk_unit, self.equity(),
                                     self.broker.cash, len(self.positions) + sum(
                                         1 for o in self.pending.values() if o["kind"] == "entry"),
-                                    self.i)
+                                    self.i, thesis["confidence"])
         if not verdict["ok"]:
             self.emit(bar.ts, symbol, _say("NOVA", "veto", "BLOCKED: " + verdict["why"]))
             return
@@ -240,7 +240,7 @@ class Desk:
             f"{thesis['side'].upper()} {thesis['confidence']:.0%}: " + ", ".join(thesis["pros"])
             + (f" | against: {'; '.join(thesis['cons'])}" if thesis["cons"] else ""), **thesis))
         self.emit(bar.ts, symbol, _say("NOVA", "approve",
-            f"APPROVED ${verdict['notional']:.2f}, risking ${verdict['risk_usd']:.2f}"
+            f"APPROVED ${verdict['notional']:.2f}, risking ${verdict['risk_usd']:.2f} ({verdict['conviction']})"
             + (" (size capped)" if verdict["capped"] else ""), **verdict))
         self.emit(bar.ts, symbol, _say("TITAN", "fire",
             f"FIRE {thesis['side'].upper()}: closed across {trig['level']} {trig['level_px']:.2f}"))
