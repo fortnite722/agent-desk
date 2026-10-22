@@ -226,7 +226,7 @@ def main():
             print("error:", e)
             wait = 15
         bot.dashboard(now)
-        if os.environ.get("CLOUD_SYNC") and time.time() - last_sync > 900:
+        if os.environ.get("CLOUD_SYNC") and time.time() - last_sync > 1200:
             subprocess.run(["bash", os.path.join(ROOT, "cloud", "sync.sh"), "options bot update"], cwd=ROOT)
             last_sync = time.time()
         if wait is None:

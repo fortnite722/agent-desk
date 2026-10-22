@@ -1,0 +1,41 @@
+name: strategy desks
+on:
+  schedule:
+    - cron: "7 * * * *"            # Turtle: every hour (acts when a 4h bar closes)
+    - cron: "50 19 * * 1-5"        # Reversion: 3:50pm New York in summer time
+    - cron: "50 20 * * 1-5"        # Reversion: 3:50pm New York in winter time
+  workflow_dispatch:
+    inputs:
+      desk:
+        description: "turtle or reversion"
+        default: "turtle"
+permissions:
+  contents: write
+concurrency:
+  group: strategy-desks
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pick the desk
+        id: pick
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "desk=${{ inputs.desk }}" >> $GITHUB_OUTPUT;
+          elif [ "${{ github.event.schedule }}" = "7 * * * *" ]; then echo "desk=turtle" >> $GITHUB_OUTPUT;
+          elif [ "$(TZ=America/New_York date +%H)" = "15" ]; then echo "desk=reversion" >> $GITHUB_OUTPUT;
+          else echo "desk=none" >> $GITHUB_OUTPUT; fi
+      - name: Run the desk
+        if: steps.pick.outputs.desk != 'none'
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+        run: python cloud/desk_step.py ${{ steps.pick.outputs.desk }}
+      - name: Save results
+        if: steps.pick.outputs.desk != 'none'
+        run: bash cloud/sync.sh "${{ steps.pick.outputs.desk }} desk"

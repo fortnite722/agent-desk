@@ -68,7 +68,7 @@ def from_csv(path):
     return bars
 
 
-def alpaca_bars(symbols, start: datetime, end: datetime | None = None, timeframe="1Min"):
+def alpaca_bars(symbols, start: datetime, end: datetime | None = None, timeframe="1Min", feed="iex"):
     """Fetch 1-minute bars from Alpaca. Crypto needs no keys; stocks need paper keys."""
     out = {s: [] for s in symbols}
     crypto = [s for s in symbols if "/" in s]
@@ -85,7 +85,7 @@ def alpaca_bars(symbols, start: datetime, end: datetime | None = None, timeframe
     if crypto:
         jobs.append((os.environ.get("ALPACA_DATA_URL", "https://data.alpaca.markets") + "/v1beta3/crypto/us/bars", crypto, {}))
     if stocks:
-        jobs.append((os.environ.get("ALPACA_DATA_URL", "https://data.alpaca.markets") + "/v2/stocks/bars", stocks, {"feed": "iex"}))
+        jobs.append((os.environ.get("ALPACA_DATA_URL", "https://data.alpaca.markets") + "/v2/stocks/bars", stocks, {"feed": feed, "adjustment": "all"}))
     for url, syms, extra in jobs:
         token = None
         while True:
@@ -113,8 +113,13 @@ def aggregate(bars, minutes):
         return bars
     out, cur, key = [], None, None
     for b in bars:
-        k = b.ts.replace(minute=(b.ts.minute // minutes) * minutes, second=0, microsecond=0) \
-            if minutes < 60 else b.ts.replace(minute=0, second=0, microsecond=0)
+        if minutes < 60:
+            k = b.ts.replace(minute=(b.ts.minute // minutes) * minutes, second=0, microsecond=0)
+        elif minutes < 1440:
+            hrs = minutes // 60
+            k = b.ts.replace(hour=(b.ts.hour // hrs) * hrs, minute=0, second=0, microsecond=0)
+        else:
+            k = b.ts.replace(hour=0, minute=0, second=0, microsecond=0)
         if k != key:
             if cur:
                 out.append(cur)
