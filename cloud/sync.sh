@@ -4,7 +4,9 @@ set -u
 cd "$(dirname "$0")/.."
 git config user.name "desk-bot"
 git config user.email "desk-bot@users.noreply.github.com"
-git add -A state docs lab_out cloud/config_crypto.json 2>/dev/null
+for p in state docs lab_out cloud/config_crypto.json; do
+  [ -e "$p" ] && git add -A "$p"
+done
 git diff --cached --quiet && exit 0
 git commit -q -m "${1:-bot update}"
 for i in 1 2 3 4 5 6; do
