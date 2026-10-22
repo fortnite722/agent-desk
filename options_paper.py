@@ -83,6 +83,8 @@ def pick_setup(rank=1):
             return Variant(**rep["survivors"][rank - 1]["variant"]), "survivor"
         if rep.get("candidates"):
             return Variant(**rep["candidates"][0]["variant"]), "experimental"
+        if rep.get("best_overall"):  # nothing proven: paper-trade the closest thing to an edge, to collect live data
+            return Variant(**rep["best_overall"][0]["variant"]), "experimental (lab found no proven edge)"
     return Variant(**FALLBACK), "experimental (no lab run yet)"
 
 

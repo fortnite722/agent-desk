@@ -128,6 +128,7 @@ def main():
         "train_pass_rate": real_rate, "control_train_pass_rate": ctrl_rate,
         "survivor_rate": real_surv, "control_survivor_rate": ctrl_surv_rate,
         "candidates": [row(r) for r in cands[:15]],
+        "best_overall": [row(r) for r in sorted(results, key=lambda r: -r[1]["t"])[:10] if r[1]["n"] >= 30],
         "survivors": [row(r) for r in survivors[:15]],
         "best_curve": curve, "best_monte_carlo": mc, "verdict": verdict,
         "by_signal": _by_signal(results),

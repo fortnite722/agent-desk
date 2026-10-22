@@ -68,5 +68,267 @@
    "test_pos": 0,
    "best_train_t": -1.32
   }
- }
+ },
+ "best_overall": [
+  {
+   "setup": "vwap_bounce | midday | any | stop -60% | tgt +100% | 45m | ATM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": false,
+    "stop": 0.6,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 0
+   },
+   "train": {
+    "n": 160,
+    "win": 0.39,
+    "avg": -2.71,
+    "pf": 0.9,
+    "t": -0.52
+   },
+   "test": {
+    "n": 113,
+    "win": 0.3,
+    "avg": -25.1,
+    "pf": 0.49,
+    "t": -3.47
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | trend | stop -60% | tgt +100% | 45m | ATM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": true,
+    "stop": 0.6,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 0
+   },
+   "train": {
+    "n": 160,
+    "win": 0.39,
+    "avg": -2.71,
+    "pf": 0.9,
+    "t": -0.52
+   },
+   "test": {
+    "n": 113,
+    "win": 0.3,
+    "avg": -25.1,
+    "pf": 0.49,
+    "t": -3.47
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | any | stop -60% | tgt +100% | 45m | 1 OTM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": false,
+    "stop": 0.6,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 1
+   },
+   "train": {
+    "n": 160,
+    "win": 0.38,
+    "avg": -2.25,
+    "pf": 0.9,
+    "t": -0.66
+   },
+   "test": {
+    "n": 113,
+    "win": 0.29,
+    "avg": -20.43,
+    "pf": 0.51,
+    "t": -3.37
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | trend | stop -60% | tgt +100% | 45m | 1 OTM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": true,
+    "stop": 0.6,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 1
+   },
+   "train": {
+    "n": 160,
+    "win": 0.38,
+    "avg": -2.25,
+    "pf": 0.9,
+    "t": -0.66
+   },
+   "test": {
+    "n": 113,
+    "win": 0.29,
+    "avg": -20.43,
+    "pf": 0.51,
+    "t": -3.37
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | any | stop -40% | tgt +100% | 45m | 1 OTM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": false,
+    "stop": 0.4,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 1
+   },
+   "train": {
+    "n": 161,
+    "win": 0.36,
+    "avg": -2.33,
+    "pf": 0.9,
+    "t": -0.66
+   },
+   "test": {
+    "n": 114,
+    "win": 0.29,
+    "avg": -15.35,
+    "pf": 0.58,
+    "t": -2.82
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | trend | stop -40% | tgt +100% | 45m | 1 OTM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": true,
+    "stop": 0.4,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 1
+   },
+   "train": {
+    "n": 161,
+    "win": 0.36,
+    "avg": -2.33,
+    "pf": 0.9,
+    "t": -0.66
+   },
+   "test": {
+    "n": 114,
+    "win": 0.29,
+    "avg": -15.35,
+    "pf": 0.58,
+    "t": -2.82
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | any | stop -40% | tgt +100% | 45m | ATM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": false,
+    "stop": 0.4,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 0
+   },
+   "train": {
+    "n": 161,
+    "win": 0.38,
+    "avg": -3.57,
+    "pf": 0.88,
+    "t": -0.7
+   },
+   "test": {
+    "n": 114,
+    "win": 0.3,
+    "avg": -19.71,
+    "pf": 0.55,
+    "t": -3.05
+   }
+  },
+  {
+   "setup": "vwap_bounce | midday | trend | stop -40% | tgt +100% | 45m | ATM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "midday",
+    "trend": true,
+    "stop": 0.4,
+    "target": 1.0,
+    "hold": 45,
+    "otm": 0
+   },
+   "train": {
+    "n": 161,
+    "win": 0.38,
+    "avg": -3.57,
+    "pf": 0.88,
+    "t": -0.7
+   },
+   "test": {
+    "n": 114,
+    "win": 0.3,
+    "avg": -19.71,
+    "pf": 0.55,
+    "t": -3.05
+   }
+  },
+  {
+   "setup": "vwap_bounce | open | any | stop -60% | tgt +100% | 20m | 1 OTM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "open",
+    "trend": false,
+    "stop": 0.6,
+    "target": 1.0,
+    "hold": 20,
+    "otm": 1
+   },
+   "train": {
+    "n": 323,
+    "win": 0.4,
+    "avg": -8.88,
+    "pf": 0.74,
+    "t": -0.75
+   },
+   "test": {
+    "n": 210,
+    "win": 0.38,
+    "avg": -25.45,
+    "pf": 0.48,
+    "t": -2.94
+   }
+  },
+  {
+   "setup": "vwap_bounce | open | trend | stop -60% | tgt +100% | 20m | 1 OTM",
+   "variant": {
+    "signal": "vwap_bounce",
+    "window": "open",
+    "trend": true,
+    "stop": 0.6,
+    "target": 1.0,
+    "hold": 20,
+    "otm": 1
+   },
+   "train": {
+    "n": 323,
+    "win": 0.4,
+    "avg": -8.88,
+    "pf": 0.74,
+    "t": -0.75
+   },
+   "test": {
+    "n": 210,
+    "win": 0.38,
+    "avg": -25.45,
+    "pf": 0.48,
+    "t": -2.94
+   }
+  }
+ ]
 }
