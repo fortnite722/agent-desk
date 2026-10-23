@@ -1,0 +1,159 @@
+{
+ "updated": "2026-10-23T06:07:27.560936+00:00",
+ "rules": {
+  "active": {
+   "full_pf": 1.15,
+   "recent_pf": 1.0,
+   "min_trades": 20,
+   "max_dd": 0.25
+  },
+  "probation": {
+   "full_pf": 1.0,
+   "recent_pf": 0.9,
+   "min_trades": 10,
+   "max_dd": 0.35
+  },
+  "live_min_trades": 10,
+  "live_bench_pf": 0.8
+ },
+ "strategies": {
+  "crypto": {
+   "name": "Crypto Desk (6 agents)",
+   "status": "BENCHED",
+   "size_mult": 0.0,
+   "reasons": [
+    "history: 591 trades, PF 0.25, return -88.6%, max drawdown 89%",
+    "recent 40%: PF 0.28, return -73.9%",
+    "loses money over the full history"
+   ],
+   "evidence": {
+    "full": {
+     "trades": 591,
+     "wins": 200,
+     "win_rate": 0.338,
+     "net": -88.56,
+     "return_pct": -0.8856,
+     "profit_factor": 0.25,
+     "max_drawdown": 0.8869,
+     "fees": 57.35,
+     "equity": 11.44
+    },
+    "recent": {
+     "trades": 389,
+     "wins": 136,
+     "win_rate": 0.35,
+     "net": -73.89,
+     "return_pct": -0.7389,
+     "profit_factor": 0.28,
+     "max_drawdown": 0.7428,
+     "fees": 54.75,
+     "equity": 26.11
+    },
+    "range": [
+     "2025-10-23",
+     "2026-10-23"
+    ],
+    "buy_hold": -0.4166,
+    "live": {
+     "trades": 0
+    }
+   }
+  },
+  "turtle": {
+   "name": "Turtle Desk",
+   "status": "BENCHED",
+   "size_mult": 0.0,
+   "reasons": [
+    "history: 263 trades, PF 0.66, return -46.6%, max drawdown 55%",
+    "recent 40%: PF 0.45, return -36.9%",
+    "loses money over the full history"
+   ],
+   "evidence": {
+    "full": {
+     "trades": 263,
+     "wins": 61,
+     "win_rate": 0.232,
+     "net": -46.58,
+     "return_pct": -0.4658,
+     "profit_factor": 0.66,
+     "max_drawdown": 0.5514,
+     "fees": 25.92,
+     "equity": 53.42
+    },
+    "recent": {
+     "trades": 122,
+     "wins": 22,
+     "win_rate": 0.18,
+     "net": -36.86,
+     "return_pct": -0.3686,
+     "profit_factor": 0.45,
+     "max_drawdown": 0.3897,
+     "fees": 13.31,
+     "equity": 63.14
+    },
+    "range": [
+     "2024-10-23",
+     "2026-10-23"
+    ],
+    "buy_hold": -0.2096,
+    "live": {
+     "trades": 0
+    }
+   }
+  },
+  "reversion": {
+   "name": "Reversion Desk",
+   "status": "ACTIVE",
+   "size_mult": 1.0,
+   "reasons": [
+    "history: 222 trades, PF 1.57, return +24.3%, max drawdown 15%",
+    "recent 40%: PF 2.74, return +26.2%"
+   ],
+   "evidence": {
+    "full": {
+     "trades": 222,
+     "wins": 152,
+     "win_rate": 0.685,
+     "net": 24.34,
+     "return_pct": 0.2434,
+     "profit_factor": 1.57,
+     "max_drawdown": 0.1477,
+     "fees": 0.0,
+     "equity": 124.34
+    },
+    "recent": {
+     "trades": 120,
+     "wins": 87,
+     "win_rate": 0.725,
+     "net": 26.24,
+     "return_pct": 0.2624,
+     "profit_factor": 2.74,
+     "max_drawdown": 0.0423,
+     "fees": 0.0,
+     "equity": 126.24
+    },
+    "range": [
+     "2016-10-26",
+     "2026-10-22"
+    ],
+    "buy_hold": 3.391,
+    "live": null
+   }
+  },
+  "options": {
+   "name": "QQQ 0DTE Desk",
+   "status": "BENCHED",
+   "size_mult": 0.0,
+   "reasons": [
+    "no 0DTE setup beat the coin-flip control on unseen QQQ data"
+   ],
+   "evidence": {
+    "verdict": "NO EDGE FOUND: real setups did no better than coin-flips. Don't trade any of them.",
+    "survivor_rate": 0.0,
+    "control_rate": 0.0,
+    "live": null
+   }
+  }
+ },
+ "summary": "1 of 4 strategies cleared to trade"
+}
