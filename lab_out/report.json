@@ -4,12 +4,12 @@
  "train_days": 297,
  "test_days": 199,
  "date_range": [
-  "2024-11-01",
-  "2026-10-26"
+  "2024-11-04",
+  "2026-10-27"
  ],
  "variants": 4320,
- "trades_simulated": 10824096,
- "runtime_s": 119,
+ "trades_simulated": 10822784,
+ "runtime_s": 95,
  "train_pass_rate": 0.0,
  "control_train_pass_rate": 0.0,
  "survivor_rate": 0.0,
@@ -25,19 +25,19 @@
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -1.65
+   "best_train_t": -1.57
   },
   "ema50_cross": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -2.83
+   "best_train_t": -2.84
   },
   "ema9_21": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -2.66
+   "best_train_t": -2.72
   },
   "orb5": {
    "variants": 540,
@@ -67,7 +67,7 @@
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -1.32
+   "best_train_t": -1.42
   }
  }
 }
