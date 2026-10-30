@@ -1,15 +1,15 @@
 {
  "source": "alpaca",
- "days": 497,
+ "days": 498,
  "train_days": 298,
- "test_days": 199,
+ "test_days": 200,
  "date_range": [
   "2024-11-04",
-  "2026-10-28"
+  "2026-10-29"
  ],
  "variants": 4320,
- "trades_simulated": 10850622,
- "runtime_s": 122,
+ "trades_simulated": 10874208,
+ "runtime_s": 124,
  "train_pass_rate": 0.0,
  "control_train_pass_rate": 0.0,
  "survivor_rate": 0.0,
@@ -54,7 +54,7 @@
   "orb30": {
    "variants": 540,
    "train_pos": 14,
-   "test_pos": 26,
+   "test_pos": 6,
    "best_train_t": 0.08
   },
   "vwap_bounce": {

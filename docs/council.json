@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-29T07:08:47.402676+00:00",
+ "updated": "2026-10-30T07:11:19.755883+00:00",
  "rules": {
   "active": {
    "full_pf": 1.15,
@@ -22,38 +22,38 @@
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 594 trades, PF 0.25, return -88.9%, max drawdown 89%",
-    "recent 40%: PF 0.27, return -74.0%",
+    "history: 595 trades, PF 0.25, return -88.7%, max drawdown 89%",
+    "recent 40%: PF 0.27, return -73.6%",
     "loses money over the full history"
    ],
    "evidence": {
     "full": {
-     "trades": 594,
-     "wins": 199,
-     "win_rate": 0.335,
-     "net": -88.93,
-     "return_pct": -0.8893,
+     "trades": 595,
+     "wins": 201,
+     "win_rate": 0.338,
+     "net": -88.73,
+     "return_pct": -0.8873,
      "profit_factor": 0.25,
-     "max_drawdown": 0.8894,
-     "fees": 57.42,
-     "equity": 11.07
+     "max_drawdown": 0.8877,
+     "fees": 58.29,
+     "equity": 11.27
     },
     "recent": {
-     "trades": 376,
+     "trades": 372,
      "wins": 128,
-     "win_rate": 0.34,
-     "net": -74.04,
-     "return_pct": -0.7404,
+     "win_rate": 0.344,
+     "net": -73.56,
+     "return_pct": -0.7356,
      "profit_factor": 0.27,
-     "max_drawdown": 0.7424,
-     "fees": 52.38,
-     "equity": 25.96
+     "max_drawdown": 0.74,
+     "fees": 52.01,
+     "equity": 26.44
     },
     "range": [
-     "2025-10-29",
-     "2026-10-29"
+     "2025-10-30",
+     "2026-10-30"
     ],
-    "buy_hold": -0.4528,
+    "buy_hold": -0.4623,
     "live": {
      "trades": 0
     }
@@ -65,7 +65,7 @@
    "size_mult": 0.0,
    "reasons": [
     "history: 259 trades, PF 0.6, return -50.4%, max drawdown 52%",
-    "recent 40%: PF 0.45, return -36.9%",
+    "recent 40%: PF 0.45, return -36.8%",
     "loses money over the full history"
    ],
    "evidence": {
@@ -84,18 +84,18 @@
      "trades": 122,
      "wins": 22,
      "win_rate": 0.18,
-     "net": -36.91,
-     "return_pct": -0.3691,
+     "net": -36.84,
+     "return_pct": -0.3684,
      "profit_factor": 0.45,
-     "max_drawdown": 0.3897,
-     "fees": 13.37,
-     "equity": 63.09
+     "max_drawdown": 0.3963,
+     "fees": 13.4,
+     "equity": 63.16
     },
     "range": [
-     "2024-10-29",
-     "2026-10-29"
+     "2024-10-30",
+     "2026-10-30"
     ],
-    "buy_hold": -0.267,
+    "buy_hold": -0.2869,
     "live": {
      "trades": 0
     }
@@ -133,10 +133,10 @@
      "equity": 126.24
     },
     "range": [
-     "2016-11-01",
-     "2026-10-28"
+     "2016-11-02",
+     "2026-10-29"
     ],
-    "buy_hold": 3.5664,
+    "buy_hold": 3.5763,
     "live": null
    }
   },
