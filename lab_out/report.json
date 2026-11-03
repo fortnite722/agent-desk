@@ -1,15 +1,15 @@
 {
  "source": "alpaca",
- "days": 498,
- "train_days": 298,
- "test_days": 200,
+ "days": 496,
+ "train_days": 297,
+ "test_days": 199,
  "date_range": [
-  "2024-11-05",
-  "2026-10-30"
+  "2024-11-08",
+  "2026-11-02"
  ],
  "variants": 4320,
- "trades_simulated": 10878535,
- "runtime_s": 117,
+ "trades_simulated": 10844711,
+ "runtime_s": 119,
  "train_pass_rate": 0.0,
  "control_train_pass_rate": 0.0,
  "survivor_rate": 0.0,
@@ -25,19 +25,19 @@
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -1.49
+   "best_train_t": -1.54
   },
   "ema50_cross": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -3.13
+   "best_train_t": -3.03
   },
   "ema9_21": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -2.84
+   "best_train_t": -2.78
   },
   "orb5": {
    "variants": 540,
@@ -61,7 +61,7 @@
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -0.75
+   "best_train_t": -0.9
   },
   "rsi_fade": {
    "variants": 540,
