@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-03T08:00:44.440451+00:00",
+ "updated": "2026-11-04T07:34:53.200528+00:00",
  "rules": {
   "active": {
    "full_pf": 1.15,
@@ -22,38 +22,38 @@
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 589 trades, PF 0.26, return -88.4%, max drawdown 88%",
-    "recent 40%: PF 0.25, return -73.7%",
+    "history: 590 trades, PF 0.26, return -88.5%, max drawdown 89%",
+    "recent 40%: PF 0.25, return -73.8%",
     "loses money over the full history"
    ],
    "evidence": {
     "full": {
-     "trades": 589,
+     "trades": 590,
      "wins": 200,
-     "win_rate": 0.34,
-     "net": -88.39,
-     "return_pct": -0.8839,
+     "win_rate": 0.339,
+     "net": -88.49,
+     "return_pct": -0.8849,
      "profit_factor": 0.26,
-     "max_drawdown": 0.8847,
-     "fees": 58.53,
-     "equity": 11.61
+     "max_drawdown": 0.8853,
+     "fees": 58.5,
+     "equity": 11.51
     },
     "recent": {
-     "trades": 360,
-     "wins": 119,
-     "win_rate": 0.331,
-     "net": -73.69,
-     "return_pct": -0.7369,
+     "trades": 358,
+     "wins": 117,
+     "win_rate": 0.327,
+     "net": -73.81,
+     "return_pct": -0.7381,
      "profit_factor": 0.25,
-     "max_drawdown": 0.7401,
-     "fees": 48.76,
-     "equity": 26.31
+     "max_drawdown": 0.74,
+     "fees": 48.28,
+     "equity": 26.19
     },
     "range": [
-     "2025-11-03",
-     "2026-11-03"
+     "2025-11-04",
+     "2026-11-04"
     ],
-    "buy_hold": -0.4278,
+    "buy_hold": -0.3797,
     "live": {
      "trades": 0
     }
@@ -64,38 +64,38 @@
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 256 trades, PF 0.6, return -49.3%, max drawdown 51%",
-    "recent 40%: PF 0.44, return -38.1%",
+    "history: 256 trades, PF 0.6, return -49.7%, max drawdown 51%",
+    "recent 40%: PF 0.46, return -35.7%",
     "loses money over the full history"
    ],
    "evidence": {
     "full": {
      "trades": 256,
-     "wins": 58,
-     "win_rate": 0.227,
-     "net": -49.34,
-     "return_pct": -0.4934,
+     "wins": 57,
+     "win_rate": 0.223,
+     "net": -49.69,
+     "return_pct": -0.4969,
      "profit_factor": 0.6,
-     "max_drawdown": 0.5135,
-     "fees": 24.04,
-     "equity": 50.66
+     "max_drawdown": 0.5132,
+     "fees": 23.87,
+     "equity": 50.31
     },
     "recent": {
-     "trades": 123,
+     "trades": 119,
      "wins": 22,
-     "win_rate": 0.179,
-     "net": -38.12,
-     "return_pct": -0.3812,
-     "profit_factor": 0.44,
-     "max_drawdown": 0.3965,
-     "fees": 13.19,
-     "equity": 61.88
+     "win_rate": 0.185,
+     "net": -35.67,
+     "return_pct": -0.3567,
+     "profit_factor": 0.46,
+     "max_drawdown": 0.3825,
+     "fees": 13.31,
+     "equity": 64.33
     },
     "range": [
-     "2024-11-03",
-     "2026-11-03"
+     "2024-11-04",
+     "2026-11-04"
     ],
-    "buy_hold": -0.2504,
+    "buy_hold": -0.2409,
     "live": {
      "trades": 0
     }
@@ -106,37 +106,37 @@
    "status": "ACTIVE",
    "size_mult": 1.0,
    "reasons": [
-    "history: 224 trades, PF 1.54, return +23.5%, max drawdown 15%",
-    "recent 40%: PF 2.59, return +25.4%"
+    "history: 224 trades, PF 1.55, return +23.9%, max drawdown 15%",
+    "recent 40%: PF 2.66, return +25.8%"
    ],
    "evidence": {
     "full": {
      "trades": 224,
      "wins": 152,
      "win_rate": 0.679,
-     "net": 23.5,
-     "return_pct": 0.235,
-     "profit_factor": 1.54,
+     "net": 23.87,
+     "return_pct": 0.2387,
+     "profit_factor": 1.55,
      "max_drawdown": 0.1477,
      "fees": 0.0,
-     "equity": 123.5
+     "equity": 123.87
     },
     "recent": {
      "trades": 122,
      "wins": 87,
      "win_rate": 0.713,
-     "net": 25.38,
-     "return_pct": 0.2538,
-     "profit_factor": 2.59,
+     "net": 25.76,
+     "return_pct": 0.2576,
+     "profit_factor": 2.66,
      "max_drawdown": 0.0423,
      "fees": 0.0,
-     "equity": 125.38
+     "equity": 125.76
     },
     "range": [
      "2016-11-07",
-     "2026-11-02"
+     "2026-11-03"
     ],
-    "buy_hold": 3.3554,
+    "buy_hold": 3.3745,
     "live": null
    }
   },
