@@ -4,12 +4,12 @@
  "train_days": 297,
  "test_days": 199,
  "date_range": [
-  "2024-11-15",
-  "2026-11-09"
+  "2024-11-18",
+  "2026-11-10"
  ],
  "variants": 4320,
- "trades_simulated": 10841261,
- "runtime_s": 94,
+ "trades_simulated": 10841304,
+ "runtime_s": 98,
  "train_pass_rate": 0.0,
  "control_train_pass_rate": 0.0,
  "survivor_rate": 0.0,
@@ -25,19 +25,19 @@
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -1.26
+   "best_train_t": -1.33
   },
   "ema50_cross": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -3.01
+   "best_train_t": -2.71
   },
   "ema9_21": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -2.75
+   "best_train_t": -2.7
   },
   "orb5": {
    "variants": 540,
@@ -54,20 +54,20 @@
   "orb30": {
    "variants": 540,
    "train_pos": 18,
-   "test_pos": 0,
+   "test_pos": 6,
    "best_train_t": 0.23
   },
   "vwap_bounce": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -0.61
+   "best_train_t": -0.71
   },
   "rsi_fade": {
    "variants": 540,
    "train_pos": 0,
    "test_pos": 0,
-   "best_train_t": -1.03
+   "best_train_t": -1.07
   }
  }
 }
