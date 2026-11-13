@@ -1,15 +1,15 @@
 {
  "source": "alpaca",
- "days": 497,
+ "days": 498,
  "train_days": 298,
- "test_days": 199,
+ "test_days": 200,
  "date_range": [
   "2024-11-18",
-  "2026-11-11"
+  "2026-11-12"
  ],
  "variants": 4320,
- "trades_simulated": 10859255,
- "runtime_s": 119,
+ "trades_simulated": 10882734,
+ "runtime_s": 123,
  "train_pass_rate": 0.0,
  "control_train_pass_rate": 0.0,
  "survivor_rate": 0.0,
