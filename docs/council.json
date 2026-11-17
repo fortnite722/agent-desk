@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-14T07:41:44.502271+00:00",
+ "updated": "2026-11-17T09:13:13.383024+00:00",
  "rules": {
   "active": {
    "full_pf": 1.15,
@@ -22,123 +22,27 @@
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 595 trades, PF 0.26, return -89.0%, max drawdown 89%",
-    "recent 40%: PF 0.26, return -71.3%",
-    "loses money over the full history"
+    "research failed: HTTP Error 429: Too Many Requests"
    ],
-   "evidence": {
-    "full": {
-     "trades": 595,
-     "wins": 200,
-     "win_rate": 0.336,
-     "net": -89.0,
-     "return_pct": -0.89,
-     "profit_factor": 0.26,
-     "max_drawdown": 0.8906,
-     "fees": 59.18,
-     "equity": 11.0
-    },
-    "recent": {
-     "trades": 333,
-     "wins": 112,
-     "win_rate": 0.336,
-     "net": -71.27,
-     "return_pct": -0.7127,
-     "profit_factor": 0.26,
-     "max_drawdown": 0.7135,
-     "fees": 48.31,
-     "equity": 28.73
-    },
-    "range": [
-     "2025-11-14",
-     "2026-11-14"
-    ],
-    "buy_hold": -0.4395,
-    "live": {
-     "trades": 0
-    }
-   }
+   "evidence": {}
   },
   "turtle": {
    "name": "Turtle Desk",
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 250 trades, PF 0.66, return -45.7%, max drawdown 49%",
-    "recent 40%: PF 0.46, return -36.6%",
-    "loses money over the full history"
+    "research failed: HTTP Error 429: Too Many Requests"
    ],
-   "evidence": {
-    "full": {
-     "trades": 250,
-     "wins": 57,
-     "win_rate": 0.228,
-     "net": -45.69,
-     "return_pct": -0.4569,
-     "profit_factor": 0.66,
-     "max_drawdown": 0.4903,
-     "fees": 26.42,
-     "equity": 54.31
-    },
-    "recent": {
-     "trades": 120,
-     "wins": 22,
-     "win_rate": 0.183,
-     "net": -36.6,
-     "return_pct": -0.366,
-     "profit_factor": 0.46,
-     "max_drawdown": 0.3707,
-     "fees": 13.71,
-     "equity": 63.4
-    },
-    "range": [
-     "2024-11-14",
-     "2026-11-14"
-    ],
-    "buy_hold": -0.4913,
-    "live": {
-     "trades": 0
-    }
-   }
+   "evidence": {}
   },
   "reversion": {
    "name": "Reversion Desk",
-   "status": "ACTIVE",
-   "size_mult": 1.0,
+   "status": "BENCHED",
+   "size_mult": 0.0,
    "reasons": [
-    "history: 224 trades, PF 1.55, return +24.2%, max drawdown 15%",
-    "recent 40%: PF 2.65, return +26.1%"
+    "research failed: HTTP Error 429: Too Many Requests"
    ],
-   "evidence": {
-    "full": {
-     "trades": 224,
-     "wins": 153,
-     "win_rate": 0.683,
-     "net": 24.2,
-     "return_pct": 0.242,
-     "profit_factor": 1.55,
-     "max_drawdown": 0.1477,
-     "fees": 0.0,
-     "equity": 124.2
-    },
-    "recent": {
-     "trades": 122,
-     "wins": 88,
-     "win_rate": 0.721,
-     "net": 26.09,
-     "return_pct": 0.2609,
-     "profit_factor": 2.65,
-     "max_drawdown": 0.0423,
-     "fees": 0.0,
-     "equity": 126.09
-    },
-    "range": [
-     "2016-11-17",
-     "2026-11-13"
-    ],
-    "buy_hold": 3.2099,
-    "live": null
-   }
+   "evidence": {}
   },
   "options": {
    "name": "QQQ 0DTE Desk",
@@ -155,5 +59,5 @@
    }
   }
  },
- "summary": "1 of 4 strategies cleared to trade"
+ "summary": "Every strategy is benched. The firm is in cash until something proves itself."
 }
