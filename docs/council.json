@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-21T08:22:08.126457+00:00",
+ "updated": "2026-11-24T10:57:39.702669+00:00",
  "rules": {
   "active": {
    "full_pf": 1.15,
@@ -22,80 +22,47 @@
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 587 trades, PF 0.26, return -88.8%, max drawdown 89%",
-    "recent 40%: PF 0.24, return -71.5%",
-    "loses money over the full history"
+    "research failed: HTTP Error 429: Too Many Requests"
    ],
-   "evidence": {
-    "full": {
-     "trades": 587,
-     "wins": 196,
-     "win_rate": 0.334,
-     "net": -88.82,
-     "return_pct": -0.8882,
-     "profit_factor": 0.26,
-     "max_drawdown": 0.8884,
-     "fees": 58.86,
-     "equity": 11.18
-    },
-    "recent": {
-     "trades": 322,
-     "wins": 104,
-     "win_rate": 0.323,
-     "net": -71.51,
-     "return_pct": -0.7151,
-     "profit_factor": 0.24,
-     "max_drawdown": 0.7151,
-     "fees": 45.73,
-     "equity": 28.49
-    },
-    "range": [
-     "2025-11-21",
-     "2026-11-21"
-    ],
-    "buy_hold": -0.4336,
-    "live": {
-     "trades": 0
-    }
-   }
+   "evidence": {}
   },
   "turtle": {
    "name": "Turtle Desk",
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "history: 244 trades, PF 0.65, return -45.6%, max drawdown 49%",
-    "recent 40%: PF 0.46, return -36.6%",
+    "history: 243 trades, PF 0.65, return -45.0%, max drawdown 49%",
+    "recent 40%: PF 0.46, return -35.9%",
     "loses money over the full history"
    ],
    "evidence": {
     "full": {
-     "trades": 244,
+     "trades": 243,
      "wins": 55,
-     "win_rate": 0.225,
-     "net": -45.64,
-     "return_pct": -0.4564,
+     "win_rate": 0.226,
+     "net": -45.03,
+     "return_pct": -0.4503,
      "profit_factor": 0.65,
      "max_drawdown": 0.4903,
-     "fees": 25.8,
-     "equity": 54.36
+     "fees": 26.0,
+     "equity": 54.97
     },
     "recent": {
-     "trades": 119,
+     "trades": 118,
      "wins": 22,
-     "win_rate": 0.185,
-     "net": -36.63,
-     "return_pct": -0.3663,
+     "win_rate": 0.186,
+     "net": -35.92,
+     "return_pct": -0.3592,
      "profit_factor": 0.46,
      "max_drawdown": 0.3709,
-     "fees": 13.55,
-     "equity": 63.37
+     "fees": 13.51,
+     "equity": 64.08
     },
     "range": [
-     "2024-11-21",
-     "2026-11-21"
+     "2024-11-24",
+     "2026-11-24"
     ],
-    "buy_hold": -0.5757,
+    "buy_hold": -0.5798,
     "live": {
      "trades": 0
     }
@@ -106,37 +73,37 @@
    "status": "ACTIVE",
    "size_mult": 1.0,
    "reasons": [
-    "history: 225 trades, PF 1.46, return +21.4%, max drawdown 15%",
-    "recent 40%: PF 2.24, return +23.2%"
+    "history: 225 trades, PF 1.52, return +23.2%, max drawdown 15%",
+    "recent 40%: PF 2.49, return +25.1%"
    ],
    "evidence": {
     "full": {
      "trades": 225,
      "wins": 153,
      "win_rate": 0.68,
-     "net": 21.36,
-     "return_pct": 0.2136,
-     "profit_factor": 1.46,
+     "net": 23.17,
+     "return_pct": 0.2317,
+     "profit_factor": 1.52,
      "max_drawdown": 0.1477,
      "fees": 0.0,
-     "equity": 121.36
+     "equity": 123.17
     },
     "recent": {
      "trades": 123,
      "wins": 88,
      "win_rate": 0.715,
-     "net": 23.21,
-     "return_pct": 0.2321,
-     "profit_factor": 2.24,
+     "net": 25.05,
+     "return_pct": 0.2505,
+     "profit_factor": 2.49,
      "max_drawdown": 0.0423,
      "fees": 0.0,
-     "equity": 123.21
+     "equity": 125.05
     },
     "range": [
-     "2016-11-25",
-     "2026-11-20"
+     "2016-11-28",
+     "2026-11-23"
     ],
-    "buy_hold": 2.766,
+    "buy_hold": 2.9962,
     "live": null
    }
   },
