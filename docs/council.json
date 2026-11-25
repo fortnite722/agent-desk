@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T10:57:39.702669+00:00",
+ "updated": "2026-11-25T09:56:51.280449+00:00",
  "rules": {
   "active": {
    "full_pf": 1.15,
@@ -22,9 +22,42 @@
    "status": "BENCHED",
    "size_mult": 0.0,
    "reasons": [
-    "research failed: HTTP Error 429: Too Many Requests"
+    "history: 581 trades, PF 0.28, return -88.1%, max drawdown 88%",
+    "recent 40%: PF 0.24, return -69.7%",
+    "loses money over the full history"
    ],
-   "evidence": {}
+   "evidence": {
+    "full": {
+     "trades": 581,
+     "wins": 197,
+     "win_rate": 0.339,
+     "net": -88.07,
+     "return_pct": -0.8807,
+     "profit_factor": 0.28,
+     "max_drawdown": 0.8831,
+     "fees": 60.22,
+     "equity": 11.93
+    },
+    "recent": {
+     "trades": 310,
+     "wins": 100,
+     "win_rate": 0.323,
+     "net": -69.69,
+     "return_pct": -0.6969,
+     "profit_factor": 0.24,
+     "max_drawdown": 0.7012,
+     "fees": 44.81,
+     "equity": 30.31
+    },
+    "range": [
+     "2025-11-25",
+     "2026-11-25"
+    ],
+    "buy_hold": -0.4614,
+    "live": {
+     "trades": 0
+    }
+   }
   },
   "turtle": {
    "name": "Turtle Desk",
@@ -59,10 +92,10 @@
      "equity": 64.08
     },
     "range": [
-     "2024-11-24",
-     "2026-11-24"
+     "2024-11-25",
+     "2026-11-25"
     ],
-    "buy_hold": -0.5798,
+    "buy_hold": -0.6059,
     "live": {
      "trades": 0
     }
@@ -101,9 +134,9 @@
     },
     "range": [
      "2016-11-28",
-     "2026-11-23"
+     "2026-11-24"
     ],
-    "buy_hold": 2.9962,
+    "buy_hold": 2.955,
     "live": null
    }
   },
